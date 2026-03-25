@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pip install anthropic python-dotenv requests)",
+      "Bash(cmd.exe /c \"python -m pip install anthropic python-dotenv requests\")",
+      "Bash(cmd.exe /c \"python --version && python -m pip install anthropic python-dotenv requests 2>&1\")",
+      "Bash(cmd.exe /c \"python --version\")",
+      "Bash(echo \"exit: $?\")"
+    ]
+  }
+}

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Máquina de Criativos — Seazone</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a1628;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: #0a1628;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-mark svg { width: 22px; height: 22px; }
+    .logo-text { font-size: 20px; font-weight: 600; color: #0a1628; }
+    .logo-sub { font-size: 11px; color: #6b7280; margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
+    h1 { font-size: 22px; font-weight: 600; color: #0a1628; margin-bottom: 6px; }
+    p.sub { font-size: 14px; color: #6b7280; margin-bottom: 32px; line-height: 1.5; }
+    label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 20px;
+      font-family: 'Inter', sans-serif;
+    }
+    input[type="text"]:focus { border-color: #0a5c4a; }
+    input[type="text"]::placeholder { color: #9ca3af; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #0a5c4a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn:hover { background: #084d3e; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .progress-wrap { margin-top: 28px; display: none; }
+    .progress-label {
+      font-size: 13px;
+      color: #374151;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #0a5c4a;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.6s ease;
+    }
+    .etapas {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .etapa-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+    .etapa-item.ativa { color: #0a5c4a; font-weight: 500; }
+    .etapa-item.feita { color: #374151; }
+    .etapa-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      flex-shrink: 0;
+    }
+    .etapa-item.ativa .etapa-dot { background: #0a5c4a; }
+    .etapa-item.feita .etapa-dot { background: #6b7280; }
+    .download-wrap {
+      margin-top: 28px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .download-wrap p { font-size: 14px; color: #374151; text-align: center; }
+    .btn-download {
+      width: 100%;
+      padding: 14px;
+      background: #0a1628;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      transition: background 0.2s;
+    }
+    .btn-download:hover { background: #0f2340; }
+    .btn-nova {
+      font-size: 13px;
+      color: #6b7280;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      text-decoration: underline;
+    }
+    .erro-msg {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #991b1b;
+      display: none;
+    }
+    .footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #4b5563;
+      opacity: 0.6;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 17 Q6 13 9 15 Q12 17 15 12 Q18 7 21 10" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M3 20 Q8 18 12 20 Q16 22 21 20" stroke="#4B9CD3" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">Seazone</div>
+        <div class="logo-sub">Máquina de Criativos</div>
+      </div>
+    </div>
+
+    <h1>Gerar criativos</h1>
+    <p class="sub">Cole os links abaixo e deixe a IA criar os criativos do empreendimento automaticamente.</p>
+
+    <div id="form-wrap">
+      <label>Link do briefing</label>
+      <input type="text" id="url-briefing" placeholder="https://notion.so/briefing-do-empreendimento"/>
+
+      <label>Link do Google Drive (assets)</label>
+      <input type="text" id="url-drive" placeholder="https://drive.google.com/drive/folders/..."/>
+
+      <button class="btn" id="btn-gerar" onclick="iniciarGeracao()">Gerar criativos</button>
+    </div>
+
+    <div class="progress-wrap" id="progress-wrap">
+      <div class="progress-label">
+        <span id="etapa-label">Iniciando...</span>
+        <span id="pct-label">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="etapas">
+        <div class="etapa-item" id="e1"><div class="etapa-dot"></div>Lendo briefing</div>
+        <div class="etapa-item" id="e2"><div class="etapa-dot"></div>Baixando assets do Drive</div>
+        <div class="etapa-item" id="e3"><div class="etapa-dot"></div>Gerando roteiros</div>
+        <div class="etapa-item" id="e4"><div class="etapa-dot"></div>Gerando imagens</div>
+        <div class="etapa-item" id="e5"><div class="etapa-dot"></div>Gerando vídeos</div>
+        <div class="etapa-item" id="e6"><div class="etapa-dot"></div>Compactando criativos</div>
+      </div>
+    </div>
+
+    <div class="download-wrap" id="download-wrap">
+      <p>Criativos gerados com sucesso!</p>
+      <a class="btn-download" href="/download">Baixar criativos (.zip)</a>
+      <button class="btn-nova" onclick="novaSessao()">Gerar novos criativos</button>
+    </div>
+
+    <div class="erro-msg" id="erro-msg"></div>
+  </div>
+
+  <div class="footer">Seazone © 2026 — Powered by Claude + Runway + Ideogram</div>
+
+  <script>
+    const etapas = {
+      "Lendo briefing...":             { id: "e1", pct: 10 },
+      "Baixando assets do Drive...":   { id: "e2", pct: 25 },
+      "Gerando roteiros...":           { id: "e3", pct: 45 },
+      "Gerando imagens...":            { id: "e4", pct: 65 },
+      "Gerando vídeos...":             { id: "e5", pct: 85 },
+      "Compactando criativos...":      { id: "e6", pct: 95 },
+      "Concluído":                     { id: "e6", pct: 100 },
+    };
+    let intervalo = null;
+    let etapaAtual = null;
+
+    function iniciarGeracao() {
+      const urlBriefing = document.getElementById("url-briefing").value.trim();
+      const urlDrive = document.getElementById("url-drive").value.trim();
+      if (!urlBriefing || !urlDrive) {
+        mostrarErro("Preencha os dois links antes de continuar.");
+        return;
+      }
+      document.getElementById("btn-gerar").disabled = true;
+      document.getElementById("erro-msg").style.display = "none";
+      document.getElementById("progress-wrap").style.display = "block";
+
+      fetch("/gerar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url_briefing: urlBriefing, url_drive: urlDrive })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.erro) { mostrarErro(data.erro); return; }
+        intervalo = setInterval(verificarProgresso, 2000);
+      })
+      .catch(() => mostrarErro("Erro ao conectar com o servidor."));
+    }
+
+    function verificarProgresso() {
+      fetch("/progresso")
+        .then(r => r.json())
+        .then(data => {
+          if (data.erro) {
+            clearInterval(intervalo);
+            mostrarErro("Erro durante a geração: " + data.erro);
+            return;
+          }
+          atualizarProgresso(data.etapa);
+          if (data.concluido) {
+            clearInterval(intervalo);
+            atualizarProgresso("Concluído");
+            setTimeout(() => {
+              document.getElementById("progress-wrap").style.display = "none";
+              document.getElementById("download-wrap").style.display = "flex";
+            }, 800);
+          }
+        });
+    }
+
+    function atualizarProgresso(etapa) {
+      const info = etapas[etapa];
+      if (!info) return;
+      document.getElementById("etapa-label").textContent = etapa;
+      document.getElementById("pct-label").textContent = info.pct + "%";
+      document.getElementById("progress-fill").style.width = info.pct + "%";
+
+      // Marca etapas anteriores como feitas
+      const ordem = Object.keys(etapas);
+      const idxAtual = ordem.indexOf(etapa);
+      ordem.forEach((e, i) => {
+        const el = document.getElementById(etapas[e].id);
+        if (!el) return;
+        if (i < idxAtual) { el.className = "etapa-item feita"; }
+        else if (i === idxAtual) { el.className = "etapa-item ativa"; }
+        else { el.className = "etapa-item"; }
+      });
+    }
+
+    function mostrarErro(msg) {
+      const el = document.getElementById("erro-msg");
+      el.textContent = msg;
+      el.style.display = "block";
+      document.getElementById("btn-gerar").disabled = false;
+      document.getElementById("progress-wrap").style.display = "none";
+    }
+
+    function novaSessao() {
+      document.getElementById("download-wrap").style.display = "none";
+      document.getElementById("form-wrap").style.display = "block";
+      document.getElementById("url-briefing").value = "";
+      document.getElementById("url-drive").value = "";
+      document.getElementById("btn-gerar").disabled = false;
+      document.getElementById("progress-fill").style.width = "0%";
+      etapaAtual = null;
+      document.querySelectorAll(".etapa-item").forEach(el => el.className = "etapa-item");
+    }
+  </script>
+</body>
+</html>
