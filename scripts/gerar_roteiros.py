@@ -1,12 +1,12 @@
 import os
 import json
 from pathlib import Path
-from anthropic import Anthropic
 from dotenv import load_dotenv
+from groq import Groq
 
-load_dotenv()
-client = Anthropic()
 ROOT = Path(__file__).parent.parent
+load_dotenv(ROOT / ".env", override=True)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 OUTPUTS = ROOT / "outputs" / "roteiros"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
 
@@ -20,7 +20,6 @@ def ler_contexto():
 
     briefing_path = ROOT / "input" / "briefing_extraido.json"
     if briefing_path.exists():
-        import json
         briefing = json.loads(briefing_path.read_text(encoding="utf-8"))
         contexto += f"\n\n---\n## BRIEFING DO EMPREENDIMENTO\n\n{json.dumps(briefing, ensure_ascii=False, indent=2)}"
     else:
@@ -39,7 +38,7 @@ def gerar_roteiro(estrutura_num, duracao, contexto):
 CONTEXTO COMPLETO:
 {contexto}
 
-TAREFA: Crie um roteiro completo para um vídeo de marketing do Novo Campeche SPOT II.
+TAREFA: Crie um roteiro completo para um vídeo de marketing do empreendimento descrito no briefing.
 
 ESPECIFICAÇÕES:
 - Estrutura: {estrutura_num} — {estruturas[estrutura_num]}
@@ -61,11 +60,16 @@ FORMATO DE RESPOSTA (JSON puro, sem markdown):
   "cta_final": "texto exato do call to action"
 }}
 
-OBRIGATÓRIO: ROI 16,40%, localização Campeche, rendimento ~R$5.500/mês, fachada.
-PROIBIDO: pé na areia, distância exata, vista mar nas unidades, urgência artificial."""
+OBRIGATÓRIO: incluir ROI, localização, rendimento mensal e fachada conforme o briefing.
+PROIBIDO: pé na areia, distância exata da praia, vista mar nas unidades, urgência artificial."""
 
-    response = client.messages.create(model="claude-opus-4-5", max_tokens=2000, messages=[{"role": "user", "content": prompt}])
-    texto = response.content[0].text.strip()
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=2048,
+        temperature=0.7
+    )
+    texto = response.choices[0].message.content.strip()
     if texto.startswith("```"):
         texto = texto.split("```")[1]
         if texto.startswith("json"):
@@ -73,7 +77,7 @@ PROIBIDO: pé na areia, distância exata, vista mar nas unidades, urgência arti
     return json.loads(texto)
 
 def main():
-    print("Gerando roteiros...\n")
+    print("Gerando roteiros com Groq (LLaMA 3.3)...\n")
     contexto = ler_contexto()
     combinacoes = [(1, "40s"), (2, "40s"), (3, "40s"), (1, "20s"), (2, "20s")]
     roteiros = []
@@ -87,7 +91,12 @@ def main():
             print(f"  Salvo: {nome}")
         except Exception as e:
             print(f"  Erro: {e}")
-    (OUTPUTS / "todos_roteiros.json").write_text(json.dumps(roteiros, ensure_ascii=False, indent=2), encoding="utf-8")
+            with open(ROOT / "outputs" / "erros.log", "a", encoding="utf-8") as f:
+                f.write(f"Roteiro {i}: {e}\n")
+
+    (OUTPUTS / "todos_roteiros.json").write_text(
+        json.dumps(roteiros, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"\n{len(roteiros)}/5 roteiros gerados.")
 
 if __name__ == "__main__":

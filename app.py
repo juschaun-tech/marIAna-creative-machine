@@ -1,93 +1,150 @@
 import os
+import sys
 import json
 import zipfile
+import subprocess
 import threading
 from pathlib import Path
-from flask import Flask, request, jsonify, send_file, render_template_string
-from flask_cors import CORS
+from flask import Flask, request, jsonify, send_file
 
 app = Flask(__name__)
-CORS(app)
+
+@app.after_request
+def add_cors(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
+
+@app.route("/<path:path>", methods=["OPTIONS"])
+@app.route("/", methods=["OPTIONS"])
+def options_handler(path=""):
+    return "", 204
 
 ROOT = Path(__file__).parent
 INPUT_DIR = ROOT / "input"
 OUTPUT_DIR = ROOT / "outputs"
 INPUT_DIR.mkdir(exist_ok=True)
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-progress_status = {"etapa": "", "concluido": False, "erro": None}
+PYTHON = sys.executable  # usa o mesmo python que rodou app.py
 
-def rodar_maquina(url_briefing: str, url_drive: str):
+progress_status = {"etapa": "", "pct": 0, "concluido": False, "erro": None}
+
+
+def rodar_script(nome_script: str, timeout: int = 300) -> bool:
+    """Executa um script e retorna True se passou, False se falhou."""
+    script_path = ROOT / "scripts" / nome_script
+    try:
+        result = subprocess.run(
+            [PYTHON, str(script_path)],
+            capture_output=True,
+            text=True,
+            cwd=str(ROOT),
+            timeout=timeout
+        )
+        print(f"\n=== {nome_script} ===")
+        print(result.stdout)
+        if result.returncode != 0:
+            print(f"STDERR: {result.stderr}")
+        return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        print(f"\n=== {nome_script} — TIMEOUT após {timeout}s ===")
+        return False
+
+
+def rodar_maquina(url_briefing: str):
     global progress_status
     try:
-        # Salva os links
+        # Salva o link do briefing (linha 2 fica em branco — assets já foram salvos)
         links_path = INPUT_DIR / "links.txt"
-        links_path.write_text(f"{url_briefing}\n{url_drive}", encoding="utf-8")
+        links_path.write_text(f"{url_briefing}\n", encoding="utf-8")
 
-        import subprocess, sys
-        scripts = [
-            ("ler_briefing.py",    "Lendo briefing..."),
-            ("baixar_assets.py",   "Baixando assets do Drive..."),
-            ("gerar_roteiros.py",  "Gerando roteiros..."),
-            ("gerar_imagens.py",   "Gerando imagens..."),
-            ("gerar_videos.py",    "Gerando vídeos..."),
-        ]
+        # Etapa 1 — Briefing
+        progress_status.update({"etapa": "Lendo briefing...", "pct": 10})
+        rodar_script("ler_briefing.py")  # continua mesmo se falhar (usa defaults)
 
-        for script, etapa in scripts:
-            progress_status["etapa"] = etapa
-            resultado = subprocess.run(
-                [sys.executable, str(ROOT / "scripts" / script)],
-                cwd=str(ROOT),
-                capture_output=True,
-                text=True
-            )
-            if resultado.returncode != 0:
-                log_path = OUTPUT_DIR / "erros.log"
-                with open(log_path, "a") as f:
-                    f.write(f"\n{script}:\n{resultado.stderr}\n")
+        # Etapa 2 — Roteiros
+        progress_status.update({"etapa": "Gerando roteiros...", "pct": 35})
+        if not rodar_script("gerar_roteiros.py"):
+            raise RuntimeError("Falha ao gerar roteiros.")
 
-        # Compacta os outputs em ZIP
-        progress_status["etapa"] = "Compactando criativos..."
+        # Etapa 3 — Imagens (usa assets já salvos em assets/)
+        progress_status.update({"etapa": "Gerando imagens...", "pct": 65})
+        rodar_script("gerar_imagens.py")
+
+        # Etapa 4 — Vídeos (timeout de 90s — não bloqueia o ZIP)
+        progress_status.update({"etapa": "Gerando vídeos...", "pct": 82})
+        rodar_script("gerar_videos.py", timeout=90)
+
+        # Compacta outputs
+        progress_status.update({"etapa": "Compactando criativos...", "pct": 95})
         zip_path = ROOT / "criativos_seazone.zip"
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
             for pasta in ["roteiros", "imagens", "videos"]:
-                pasta_path = OUTPUT_DIR / pasta
-                if pasta_path.exists():
-                    for arquivo in pasta_path.iterdir():
-                        if arquivo.is_file():
-                            zf.write(arquivo, f"{pasta}/{arquivo.name}")
+                dir_pasta = OUTPUT_DIR / pasta
+                if dir_pasta.exists():
+                    for arq in dir_pasta.iterdir():
+                        zf.write(arq, f"{pasta}/{arq.name}")
 
-        progress_status["etapa"] = "Concluído"
-        progress_status["concluido"] = True
+        progress_status.update({"etapa": "Concluído!", "pct": 100, "concluido": True})
 
     except Exception as e:
-        progress_status["erro"] = str(e)
-        progress_status["etapa"] = "Erro"
+        progress_status.update({"erro": str(e), "etapa": f"Erro: {e}"})
+        with open(OUTPUT_DIR / "erros.log", "a", encoding="utf-8") as f:
+            f.write(f"app.py: {e}\n")
+
 
 @app.route("/")
 def index():
-    with open(ROOT / "index.html", encoding="utf-8") as f:
-        return f.read()
+    return (ROOT / "index.html").read_text(encoding="utf-8")
+
 
 @app.route("/gerar", methods=["POST"])
 def gerar():
     global progress_status
-    data = request.json
-    url_briefing = data.get("url_briefing", "").strip()
-    url_drive = data.get("url_drive", "").strip()
 
-    if not url_briefing or not url_drive:
-        return jsonify({"erro": "Preencha os dois links"}), 400
+    url_briefing = request.form.get("url_briefing", "").strip()
+    if not url_briefing:
+        return jsonify({"erro": "Cole o link do briefing"}), 400
 
-    progress_status = {"etapa": "Iniciando...", "concluido": False, "erro": None}
-    thread = threading.Thread(target=rodar_maquina, args=(url_briefing, url_drive))
-    thread.daemon = True
-    thread.start()
+    # Salva imagens enviadas em assets/
+    ASSETS_DIR = ROOT / "assets"
+    ASSETS_DIR.mkdir(exist_ok=True)
 
-    return jsonify({"ok": True})
+    # Limpa assets anteriores
+    for f in ASSETS_DIR.iterdir():
+        if f.is_file():
+            f.unlink()
+
+    imagens_salvas = 0
+    for key in sorted(request.files.keys()):
+        file = request.files[key]
+        if not file or not file.filename:
+            continue
+        ext = Path(file.filename).suffix.lower() or ".jpg"
+        if ext not in {".jpg", ".jpeg", ".png", ".webp"}:
+            continue
+        destino = ASSETS_DIR / f"asset_{imagens_salvas + 1}{ext}"
+        file.save(str(destino))
+        print(f"[upload] salvo: {destino.name} ({destino.stat().st_size} bytes)")
+        imagens_salvas += 1
+
+    if imagens_salvas == 0:
+        return jsonify({"erro": "Selecione ao menos 1 imagem (JPG, PNG ou WEBP)"}), 400
+
+    progress_status = {"etapa": "Iniciando...", "pct": 0, "concluido": False, "erro": None}
+    t = threading.Thread(target=rodar_maquina, args=(url_briefing,))
+    t.daemon = True
+    t.start()
+
+    return jsonify({"ok": True, "imagens": imagens_salvas})
+
 
 @app.route("/progresso")
 def progresso():
     return jsonify(progress_status)
+
 
 @app.route("/download")
 def download():
@@ -96,6 +153,7 @@ def download():
         return jsonify({"erro": "ZIP não encontrado"}), 404
     return send_file(zip_path, as_attachment=True, download_name="criativos_seazone.zip")
 
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=False)

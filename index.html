@@ -22,7 +22,7 @@
       border-radius: 16px;
       padding: 48px 40px;
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.4);
     }
     .logo {
@@ -32,13 +32,10 @@
       margin-bottom: 32px;
     }
     .logo-mark {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       background: #0a1628;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
     .logo-mark svg { width: 22px; height: 22px; }
     .logo-text { font-size: 20px; font-weight: 600; color: #0a1628; }
@@ -47,130 +44,136 @@
     p.sub { font-size: 14px; color: #6b7280; margin-bottom: 32px; line-height: 1.5; }
     label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
     input[type="text"] {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #111827;
-      outline: none;
-      transition: border-color 0.2s;
-      margin-bottom: 20px;
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid #e5e7eb; border-radius: 8px;
+      font-size: 14px; color: #111827; outline: none;
+      transition: border-color 0.2s; margin-bottom: 20px;
       font-family: 'Inter', sans-serif;
     }
     input[type="text"]:focus { border-color: #0a5c4a; }
     input[type="text"]::placeholder { color: #9ca3af; }
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: #0a5c4a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
+
+    /* Upload area */
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 10px;
+      padding: 24px 20px;
+      text-align: center;
       cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .upload-area:hover, .upload-area.dragover {
+      border-color: #0a5c4a;
+      background: #f0faf7;
+    }
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 28px; margin-bottom: 8px; }
+    .upload-text { font-size: 14px; color: #374151; font-weight: 500; }
+    .upload-hint { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+    /* Preview grid */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .preview-slot {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1.5px dashed #e5e7eb;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      position: relative;
+      background: #f9fafb;
+    }
+    .preview-slot img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 6px;
+    }
+    .preview-slot .slot-num {
+      font-size: 18px; color: #d1d5db; font-weight: 600;
+    }
+    .preview-slot .remove-btn {
+      position: absolute; top: 3px; right: 3px;
+      background: rgba(0,0,0,0.55); color: #fff;
+      border: none; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 10px;
+      cursor: pointer; display: none;
+      align-items: center; justify-content: center; line-height: 1;
+    }
+    .preview-slot:hover .remove-btn { display: flex; }
+    .preview-count { font-size: 12px; color: #6b7280; margin-bottom: 20px; }
+
+    .btn {
+      width: 100%; padding: 14px;
+      background: #0a5c4a; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
       transition: background 0.2s, opacity 0.2s;
       font-family: 'Inter', sans-serif;
     }
     .btn:hover { background: #084d3e; }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
     .progress-wrap { margin-top: 28px; display: none; }
     .progress-label {
-      font-size: 13px;
-      color: #374151;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
+      font-size: 13px; color: #374151; margin-bottom: 8px;
+      display: flex; justify-content: space-between;
     }
     .progress-bar-bg {
-      width: 100%;
-      height: 6px;
-      background: #e5e7eb;
-      border-radius: 99px;
-      overflow: hidden;
+      width: 100%; height: 6px; background: #e5e7eb;
+      border-radius: 99px; overflow: hidden;
     }
     .progress-bar-fill {
-      height: 100%;
-      background: #0a5c4a;
-      border-radius: 99px;
-      width: 0%;
-      transition: width 0.6s ease;
+      height: 100%; background: #0a5c4a; border-radius: 99px;
+      width: 0%; transition: width 0.6s ease;
     }
-    .etapas {
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .etapas { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
     .etapa-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: #9ca3af;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: #9ca3af;
     }
     .etapa-item.ativa { color: #0a5c4a; font-weight: 500; }
     .etapa-item.feita { color: #374151; }
     .etapa-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #e5e7eb;
-      flex-shrink: 0;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #e5e7eb; flex-shrink: 0;
     }
     .etapa-item.ativa .etapa-dot { background: #0a5c4a; }
     .etapa-item.feita .etapa-dot { background: #6b7280; }
+
     .download-wrap {
-      margin-top: 28px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
+      margin-top: 28px; display: none;
+      flex-direction: column; align-items: center; gap: 12px;
     }
     .download-wrap p { font-size: 14px; color: #374151; text-align: center; }
     .btn-download {
-      width: 100%;
-      padding: 14px;
-      background: #0a1628;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
+      width: 100%; padding: 14px;
+      background: #0a1628; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
       font-family: 'Inter', sans-serif;
-      text-decoration: none;
-      text-align: center;
-      display: block;
+      text-decoration: none; text-align: center; display: block;
       transition: background 0.2s;
     }
     .btn-download:hover { background: #0f2340; }
     .btn-nova {
-      font-size: 13px;
-      color: #6b7280;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      text-decoration: underline;
+      font-size: 13px; color: #6b7280;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; text-decoration: underline;
     }
     .erro-msg {
-      margin-top: 16px;
-      padding: 12px 14px;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #991b1b;
-      display: none;
+      margin-top: 16px; padding: 12px 14px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; font-size: 13px; color: #991b1b; display: none;
     }
     .footer {
-      margin-top: 24px;
-      font-size: 12px;
-      color: #4b5563;
-      opacity: 0.6;
-      text-align: center;
+      margin-top: 24px; font-size: 12px; color: #4b5563;
+      opacity: 0.6; text-align: center;
     }
   </style>
 </head>
@@ -190,14 +193,30 @@
     </div>
 
     <h1>Gerar criativos</h1>
-    <p class="sub">Cole os links abaixo e deixe a IA criar os criativos do empreendimento automaticamente.</p>
+    <p class="sub">Cole o link do briefing, faça upload das imagens e deixe a IA montar os criativos.</p>
 
     <div id="form-wrap">
       <label>Link do briefing</label>
       <input type="text" id="url-briefing" placeholder="https://notion.so/briefing-do-empreendimento"/>
 
-      <label>Link do Google Drive (assets)</label>
-      <input type="text" id="url-drive" placeholder="https://drive.google.com/drive/folders/..."/>
+      <label>Imagens do empreendimento <span style="color:#9ca3af;font-weight:400">(até 5 — fachada, aérea, área de lazer…)</span></label>
+
+      <div class="upload-area" id="upload-area"
+           ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+        <input type="file" id="file-input" accept="image/*" multiple onchange="aoSelecionarArquivos(this.files)"/>
+        <div class="upload-icon">📁</div>
+        <div class="upload-text">Clique ou arraste as imagens aqui</div>
+        <div class="upload-hint">JPG, PNG, WEBP — até 5 imagens</div>
+      </div>
+
+      <div class="preview-grid" id="preview-grid">
+        <div class="preview-slot" id="slot-0"><span class="slot-num">1</span></div>
+        <div class="preview-slot" id="slot-1"><span class="slot-num">2</span></div>
+        <div class="preview-slot" id="slot-2"><span class="slot-num">3</span></div>
+        <div class="preview-slot" id="slot-3"><span class="slot-num">4</span></div>
+        <div class="preview-slot" id="slot-4"><span class="slot-num">5</span></div>
+      </div>
+      <div class="preview-count" id="preview-count">0 imagens selecionadas</div>
 
       <button class="btn" id="btn-gerar" onclick="iniciarGeracao()">Gerar criativos</button>
     </div>
@@ -212,11 +231,9 @@
       </div>
       <div class="etapas">
         <div class="etapa-item" id="e1"><div class="etapa-dot"></div>Lendo briefing</div>
-        <div class="etapa-item" id="e2"><div class="etapa-dot"></div>Baixando assets do Drive</div>
-        <div class="etapa-item" id="e3"><div class="etapa-dot"></div>Gerando roteiros</div>
-        <div class="etapa-item" id="e4"><div class="etapa-dot"></div>Gerando imagens</div>
-        <div class="etapa-item" id="e5"><div class="etapa-dot"></div>Gerando vídeos</div>
-        <div class="etapa-item" id="e6"><div class="etapa-dot"></div>Compactando criativos</div>
+        <div class="etapa-item" id="e2"><div class="etapa-dot"></div>Gerando roteiros</div>
+        <div class="etapa-item" id="e3"><div class="etapa-dot"></div>Gerando imagens</div>
+        <div class="etapa-item" id="e4"><div class="etapa-dot"></div>Compactando criativos</div>
       </div>
     </div>
 
@@ -229,44 +246,98 @@
     <div class="erro-msg" id="erro-msg"></div>
   </div>
 
-  <div class="footer">Seazone © 2026 — Powered by Claude + Runway + Ideogram</div>
+  <div class="footer">Seazone © 2026 — Powered by Claude + Pillow</div>
 
   <script>
-    const etapas = {
-      "Lendo briefing...":             { id: "e1", pct: 10 },
-      "Baixando assets do Drive...":   { id: "e2", pct: 25 },
-      "Gerando roteiros...":           { id: "e3", pct: 45 },
-      "Gerando imagens...":            { id: "e4", pct: 65 },
-      "Gerando vídeos...":             { id: "e5", pct: 85 },
-      "Compactando criativos...":      { id: "e6", pct: 95 },
-      "Concluído":                     { id: "e6", pct: 100 },
-    };
-    let intervalo = null;
-    let etapaAtual = null;
+    let arquivosSelecionados = [];
 
+    // ---- Upload handlers ----
+    function dragOver(e) {
+      e.preventDefault();
+      document.getElementById("upload-area").classList.add("dragover");
+    }
+    function dragLeave(e) {
+      document.getElementById("upload-area").classList.remove("dragover");
+    }
+    function drop(e) {
+      e.preventDefault();
+      document.getElementById("upload-area").classList.remove("dragover");
+      aoSelecionarArquivos(e.dataTransfer.files);
+    }
+
+    function aoSelecionarArquivos(files) {
+      const novos = Array.from(files).filter(f => f.type.startsWith("image/"));
+      for (const f of novos) {
+        if (arquivosSelecionados.length >= 5) break;
+        arquivosSelecionados.push(f);
+      }
+      renderizarPreviews();
+    }
+
+    function renderizarPreviews() {
+      for (let i = 0; i < 5; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        if (arquivosSelecionados[i]) {
+          const url = URL.createObjectURL(arquivosSelecionados[i]);
+          slot.innerHTML = `
+            <img src="${url}" alt="imagem ${i+1}"/>
+            <button class="remove-btn" onclick="remover(${i})">✕</button>`;
+        } else {
+          slot.innerHTML = `<span class="slot-num">${i+1}</span>`;
+        }
+      }
+      const n = arquivosSelecionados.length;
+      document.getElementById("preview-count").textContent =
+        n === 0 ? "0 imagens selecionadas" :
+        n === 1 ? "1 imagem selecionada" :
+        `${n} imagens selecionadas`;
+    }
+
+    function remover(idx) {
+      arquivosSelecionados.splice(idx, 1);
+      renderizarPreviews();
+    }
+
+    // ---- Geração ----
     function iniciarGeracao() {
       const urlBriefing = document.getElementById("url-briefing").value.trim();
-      const urlDrive = document.getElementById("url-drive").value.trim();
-      if (!urlBriefing || !urlDrive) {
-        mostrarErro("Preencha os dois links antes de continuar.");
+      if (!urlBriefing) {
+        mostrarErro("Cole o link do briefing antes de continuar.");
         return;
       }
+      if (arquivosSelecionados.length === 0) {
+        mostrarErro("Selecione ao menos 1 imagem para continuar.");
+        return;
+      }
+
       document.getElementById("btn-gerar").disabled = true;
       document.getElementById("erro-msg").style.display = "none";
+      document.getElementById("form-wrap").style.display = "none";
       document.getElementById("progress-wrap").style.display = "block";
 
-      fetch("/gerar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url_briefing: urlBriefing, url_drive: urlDrive })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.erro) { mostrarErro(data.erro); return; }
-        intervalo = setInterval(verificarProgresso, 2000);
-      })
-      .catch(() => mostrarErro("Erro ao conectar com o servidor."));
+      const fd = new FormData();
+      fd.append("url_briefing", urlBriefing);
+      arquivosSelecionados.forEach((f, i) => fd.append(`imagem_${i}`, f, f.name));
+
+      fetch("/gerar", { method: "POST", body: fd })
+        .then(r => r.json())
+        .then(data => {
+          if (data.erro) { mostrarErro(data.erro); return; }
+          intervalo = setInterval(verificarProgresso, 2000);
+        })
+        .catch(() => mostrarErro("Erro ao conectar com o servidor."));
     }
+
+    // ---- Progresso ----
+    const etapasMap = {
+      "Lendo briefing...":       { id: "e1", pct: 20 },
+      "Gerando roteiros...":     { id: "e2", pct: 50 },
+      "Gerando imagens...":      { id: "e3", pct: 75 },
+      "Gerando vídeos...":       { id: "e3", pct: 88 },
+      "Compactando criativos...":{ id: "e4", pct: 95 },
+      "Concluído!":              { id: "e4", pct: 100 },
+    };
+    let intervalo = null;
 
     function verificarProgresso() {
       fetch("/progresso")
@@ -275,12 +346,14 @@
           if (data.erro) {
             clearInterval(intervalo);
             mostrarErro("Erro durante a geração: " + data.erro);
+            document.getElementById("form-wrap").style.display = "block";
+            document.getElementById("progress-wrap").style.display = "none";
+            document.getElementById("btn-gerar").disabled = false;
             return;
           }
-          atualizarProgresso(data.etapa);
+          atualizarProgresso(data.etapa, data.pct);
           if (data.concluido) {
             clearInterval(intervalo);
-            atualizarProgresso("Concluído");
             setTimeout(() => {
               document.getElementById("progress-wrap").style.display = "none";
               document.getElementById("download-wrap").style.display = "flex";
@@ -289,22 +362,25 @@
         });
     }
 
-    function atualizarProgresso(etapa) {
-      const info = etapas[etapa];
-      if (!info) return;
-      document.getElementById("etapa-label").textContent = etapa;
-      document.getElementById("pct-label").textContent = info.pct + "%";
-      document.getElementById("progress-fill").style.width = info.pct + "%";
+    function atualizarProgresso(etapa, pct) {
+      document.getElementById("etapa-label").textContent = etapa || "Processando...";
+      const info = etapasMap[etapa];
+      const p = info ? info.pct : (pct || 0);
+      document.getElementById("pct-label").textContent = p + "%";
+      document.getElementById("progress-fill").style.width = p + "%";
 
-      // Marca etapas anteriores como feitas
-      const ordem = Object.keys(etapas);
+      const ordem = Object.keys(etapasMap);
       const idxAtual = ordem.indexOf(etapa);
+      const vistos = new Set();
       ordem.forEach((e, i) => {
-        const el = document.getElementById(etapas[e].id);
+        const id = etapasMap[e].id;
+        if (vistos.has(id)) return;
+        vistos.add(id);
+        const el = document.getElementById(id);
         if (!el) return;
-        if (i < idxAtual) { el.className = "etapa-item feita"; }
-        else if (i === idxAtual) { el.className = "etapa-item ativa"; }
-        else { el.className = "etapa-item"; }
+        if (i < idxAtual)      el.className = "etapa-item feita";
+        else if (i === idxAtual) el.className = "etapa-item ativa";
+        else                   el.className = "etapa-item";
       });
     }
 
@@ -312,18 +388,16 @@
       const el = document.getElementById("erro-msg");
       el.textContent = msg;
       el.style.display = "block";
-      document.getElementById("btn-gerar").disabled = false;
-      document.getElementById("progress-wrap").style.display = "none";
     }
 
     function novaSessao() {
+      arquivosSelecionados = [];
+      renderizarPreviews();
       document.getElementById("download-wrap").style.display = "none";
       document.getElementById("form-wrap").style.display = "block";
       document.getElementById("url-briefing").value = "";
-      document.getElementById("url-drive").value = "";
       document.getElementById("btn-gerar").disabled = false;
       document.getElementById("progress-fill").style.width = "0%";
-      etapaAtual = null;
       document.querySelectorAll(".etapa-item").forEach(el => el.className = "etapa-item");
     }
   </script>
