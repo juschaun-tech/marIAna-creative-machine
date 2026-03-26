@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from groq import Groq
 
 ROOT = Path(__file__).parent.parent
-load_dotenv(ROOT / ".env", override=True)
+load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 INPUT_DIR = ROOT / "input"
 INPUT_DIR.mkdir(exist_ok=True)

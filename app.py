@@ -6,6 +6,9 @@ import subprocess
 import threading
 from pathlib import Path
 from flask import Flask, request, jsonify, send_file
+from dotenv import load_dotenv
+
+load_dotenv()  # carrega .env local se existir, sem sobrescrever vars da plataforma
 
 app = Flask(__name__)
 
