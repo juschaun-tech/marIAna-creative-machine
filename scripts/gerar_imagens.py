@@ -11,7 +11,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT         = Path(__file__).parent.parent
-ROTEIROS_DIR = ROOT / "outputs" / "roteiros"
 ASSETS_DIR   = ROOT / "assets"
 OUTPUTS      = ROOT / "outputs" / "imagens"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
@@ -160,7 +159,7 @@ def carregar_briefing() -> dict:
 
 # ── Geradores por formato ─────────────────────────────────────────────────────
 
-def gerar_4x5(asset, roteiro, destino, briefing, idx=1):
+def gerar_4x5(asset, destino, briefing, idx=1):
     """1080×1350 — texto em cima, foto abaixo."""
     W, H = 1080, 1350
     img = crop_center(Image.open(asset).convert("RGB"), W, H).convert("RGBA")
@@ -168,7 +167,7 @@ def gerar_4x5(asset, roteiro, destino, briefing, idx=1):
     img = Image.alpha_composite(img, _rodape_overlay(W, H, 0.18, 170))
 
     draw = ImageDraw.Draw(img)
-    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, roteiro, idx)
+    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, idx)
 
     y = 68
     y = texto_centrado(draw, y, "SEAZONE INVESTIMENTOS", fonte(28, "regular"), (80, 80, 80), W) + 14
@@ -179,12 +178,12 @@ def gerar_4x5(asset, roteiro, destino, briefing, idx=1):
     if dado:
         texto_centrado(draw, y, dado, fonte(34, "bold"), (15, 15, 15), W)
 
-    cta1, cta2 = split_cta(_cta(roteiro))
+    cta1, cta2 = split_cta(CTA_PADRAO)
     draw_rodape(draw, W, H, fonte(42, "bold"), fonte(30, "regular"), cta1, cta2)
     img.convert("RGB").save(destino, "JPEG", quality=93)
 
 
-def gerar_1x1(asset, roteiro, destino, briefing, idx=1):
+def gerar_1x1(asset, destino, briefing, idx=1):
     """1080×1080 — texto em faixa no topo, foto ocupa metade inferior."""
     W, H = 1080, 1080
     img = crop_center(Image.open(asset).convert("RGB"), W, H).convert("RGBA")
@@ -192,7 +191,7 @@ def gerar_1x1(asset, roteiro, destino, briefing, idx=1):
     img = Image.alpha_composite(img, _rodape_overlay(W, H, 0.20, 170))
 
     draw = ImageDraw.Draw(img)
-    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, roteiro, idx)
+    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, idx)
 
     y = 56
     y = texto_centrado(draw, y, "SEAZONE INVESTIMENTOS", fonte(26, "regular"), (80, 80, 80), W) + 10
@@ -203,12 +202,12 @@ def gerar_1x1(asset, roteiro, destino, briefing, idx=1):
     if dado:
         texto_centrado(draw, y, dado, fonte(30, "bold"), (15, 15, 15), W)
 
-    cta1, cta2 = split_cta(_cta(roteiro))
+    cta1, cta2 = split_cta(CTA_PADRAO)
     draw_rodape(draw, W, H, fonte(38, "bold"), fonte(26, "regular"), cta1, cta2, pad=48)
     img.convert("RGB").save(destino, "JPEG", quality=93)
 
 
-def gerar_16x9(asset, roteiro, destino, briefing, idx=1):
+def gerar_16x9(asset, destino, briefing, idx=1):
     """1080×607 — foto à direita, faixa escura à esquerda com texto."""
     W, H = 1080, 607
     img = crop_center(Image.open(asset).convert("RGB"), W, H).convert("RGBA")
@@ -223,7 +222,7 @@ def gerar_16x9(asset, roteiro, destino, briefing, idx=1):
     img = Image.alpha_composite(img, _rodape_overlay(W, H, 0.22, 150))
 
     draw = ImageDraw.Draw(img)
-    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, roteiro, idx)
+    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, idx)
 
     pad = 48
     y = 36
@@ -253,7 +252,7 @@ def gerar_16x9(asset, roteiro, destino, briefing, idx=1):
         draw.text((pad, y), dado, font=fonte(26, "bold"), fill=(255, 255, 230))
 
     draw.text((pad, H - 72), "seazone", font=fonte(32, "bold"), fill=(255, 255, 255))
-    cta1, cta2 = split_cta(_cta(roteiro))
+    cta1, cta2 = split_cta(CTA_PADRAO)
     cta_fnt = fonte(22, "regular")
     bb1 = draw.textbbox((0, 0), cta1, font=cta_fnt)
     draw.text((W - 44 - (bb1[2] - bb1[0]), H - 72), cta1, font=cta_fnt, fill=(255, 255, 255))
@@ -277,10 +276,10 @@ def _rodape_overlay(W, H, pct, alpha_max):
     return ov
 
 
-def _conteudo(briefing, roteiro, idx: int) -> dict:
+def _conteudo(briefing, idx: int) -> dict:
     """
     Retorna headline, subtitulo e dado_financeiro diferentes por índice (1-5),
-    usando exclusivamente dados do briefing + roteiro — sem inventar nada.
+    usando exclusivamente dados do briefing — sem inventar nada.
     """
     fin  = briefing.get("dados_financeiros", {})
     loc  = briefing.get("localizacao", {})
@@ -289,10 +288,6 @@ def _conteudo(briefing, roteiro, idx: int) -> dict:
     nome   = briefing.get("nome_empreendimento", "Novo Empreendimento")
     bairro = loc.get("bairro", "Campeche")
     cidade = loc.get("cidade", "Florianópolis")
-
-    # Headline: texto de destaque do roteiro, senão nome do empreendimento
-    textos   = roteiro.get("texto_na_tela", [])
-    destaque = next((t["texto"] for t in textos if t.get("destaque")), None)
 
     roi        = fin.get("roi", "")
     rend       = fin.get("rendimento_mensal", "")
@@ -306,27 +301,27 @@ def _conteudo(briefing, roteiro, idx: int) -> dict:
 
     variantes = {
         1: {
-            "headline":   destaque or nome,
+            "headline":   nome,
             "subtitulo":  "gere renda passiva investindo em",
             "dado":       f"ROI {roi} ao ano  ·  {rend}/mês" if roi and rend else f"ROI {roi} ao ano",
         },
         2: {
-            "headline":   f"A partir de {menor_cota}" if menor_cota else destaque or nome,
+            "headline":   f"A partir de {menor_cota}" if menor_cota else nome,
             "subtitulo":  f"rentabilidade de {rent_anual}" if rent_anual else "investimento acessível em",
             "dado":       f"Ticket médio {ticket}  ·  {num_cotas} cotas" if ticket else f"Valorização {valorizacao}",
         },
         3: {
-            "headline":   destaques[0] if destaques else destaque or nome,
+            "headline":   destaques[0] if destaques else nome,
             "subtitulo":  f"próximo a {destaques[1]}" if len(destaques) > 1 else "no melhor da",
             "dado":       f"{bairro}, {cidade}  ·  ROI {roi}" if roi else f"{bairro}, {cidade}",
         },
         4: {
-            "headline":   diferenciais[0] if diferenciais else destaque or nome,
+            "headline":   diferenciais[0] if diferenciais else nome,
             "subtitulo":  diferenciais[1] if len(diferenciais) > 1 else "em",
             "dado":       f"Rendimento {rend}/mês  ·  Valorização {valorizacao}" if rend and valorizacao else f"ROI {roi}",
         },
         5: {
-            "headline":   destaque or nome,
+            "headline":   nome,
             "subtitulo":  f"valorização de {valorizacao} ao ano" if valorizacao else "invista agora em",
             "dado":       f"ROI {roi}  ·  Rentabilidade {rent_anual}" if roi and rent_anual else f"Rendimento {rend}",
         },
@@ -336,8 +331,7 @@ def _conteudo(briefing, roteiro, idx: int) -> dict:
     return v["headline"], v["subtitulo"], v["dado"], bairro, cidade
 
 
-def _cta(roteiro):
-    return roteiro.get("cta_final", "Acesse e simule o seu retorno com a Seazone.")
+CTA_PADRAO = "Acesse e simule o seu retorno com a Seazone."
 
 
 def _quebrar(texto, fnt, draw, max_w):
@@ -380,18 +374,11 @@ GERADORES = {
 }
 
 
+NUM_IMAGENS = 5
+
+
 def main():
     print("Gerando imagens (4:5 · 1:1 · 16:9)...\n")
-
-    rp = ROTEIROS_DIR / "todos_roteiros.json"
-    if not rp.exists():
-        print("Execute gerar_roteiros.py primeiro.")
-        return
-
-    roteiros = json.loads(rp.read_text(encoding="utf-8"))
-    if not roteiros:
-        print("Nenhum roteiro encontrado.")
-        return
 
     assets = listar_assets()
     if not assets:
@@ -401,20 +388,18 @@ def main():
         return
 
     briefing = carregar_briefing()
-    total = len(roteiros[:5]) * len(GERADORES)
-    print(f"{len(assets)} foto(s) · {len(roteiros[:5])} roteiros · {total} imagens\n")
+    total = NUM_IMAGENS * len(GERADORES)
+    print(f"{len(assets)} foto(s) · {NUM_IMAGENS} variantes · {total} imagens\n")
 
     geradas = 0
-    for i, roteiro in enumerate(roteiros[:5], 1):
-        est = roteiro.get("estrutura", i)
-        dur = roteiro.get("duracao", "?").replace("s", "")
+    for i in range(1, NUM_IMAGENS + 1):
         asset = assets[(i - 1) % len(assets)]
 
         for fmt, fn in GERADORES.items():
-            nome = f"imagem_{i:02d}_{fmt}_estrutura{est}_{dur}.jpg"
+            nome = f"imagem_{i:02d}_{fmt}.jpg"
             print(f"  {nome}  ({asset.name})")
             try:
-                fn(asset, roteiro, OUTPUTS / nome, briefing, idx=i)
+                fn(asset, OUTPUTS / nome, briefing, idx=i)
                 geradas += 1
             except Exception as e:
                 print(f"    Erro: {e}")
