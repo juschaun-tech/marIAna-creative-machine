@@ -10,6 +10,14 @@ from dotenv import load_dotenv
 
 load_dotenv()  # carrega .env local se existir, sem sobrescrever vars da plataforma
 
+# Log de diagnóstico — mostra quais chaves estão configuradas (sem expor valores)
+for var in ["GROQ_API_KEY", "RUNWAY_API_KEY"]:
+    valor = os.environ.get(var)
+    if valor:
+        print(f"[env] {var} = configurada ({len(valor)} chars)")
+    else:
+        print(f"[env] ⚠ {var} = NÃO CONFIGURADA")
+
 app = Flask(__name__)
 
 @app.after_request
@@ -39,12 +47,14 @@ def rodar_script(nome_script: str, timeout: int = 300) -> bool:
     """Executa um script e retorna True se passou, False se falhou."""
     script_path = ROOT / "scripts" / nome_script
     try:
+        env = os.environ.copy()
         result = subprocess.run(
             [PYTHON, str(script_path)],
             capture_output=True,
             text=True,
             cwd=str(ROOT),
-            timeout=timeout
+            timeout=timeout,
+            env=env
         )
         print(f"\n=== {nome_script} ===")
         print(result.stdout)

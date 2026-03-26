@@ -1,12 +1,19 @@
 import os
+import sys
 import json
 from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 
 ROOT = Path(__file__).parent.parent
-load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+load_dotenv(ROOT / ".env")
+
+GROQ_KEY = os.environ.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
+if not GROQ_KEY:
+    print("ERRO FATAL: GROQ_API_KEY não está definida. Configure no Railway ou no .env")
+    sys.exit(1)
+
+client = Groq(api_key=GROQ_KEY)
 OUTPUTS = ROOT / "outputs" / "roteiros"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
 
