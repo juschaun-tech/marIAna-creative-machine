@@ -55,10 +55,16 @@ FORMATOS = {
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
+# Fontes DejaVu/Liberation renderizam ~20% menores que Arial no mesmo tamanho
+_USA_WINDOWS = FONT_BOLD and "Windows" in FONT_BOLD
+FONT_SCALE = 1.0 if _USA_WINDOWS else 1.25
+
+
 def fonte(tamanho: int, estilo: str = "bold") -> ImageFont.FreeTypeFont:
     mapa = {"bold": FONT_BOLD, "regular": FONT_REGULAR, "italic": FONT_ITALIC}
+    tamanho_real = int(tamanho * FONT_SCALE)
     try:
-        return ImageFont.truetype(mapa.get(estilo, FONT_BOLD), tamanho)
+        return ImageFont.truetype(mapa.get(estilo, FONT_BOLD), tamanho_real)
     except Exception:
         return ImageFont.load_default()
 
