@@ -75,7 +75,7 @@ def rodar_maquina(url_briefing: str):
 
         # Etapa 1 — Briefing
         progress_status.update({"etapa": "Lendo briefing...", "pct": 15})
-        rodar_script("ler_briefing.py", timeout=600)  # continua mesmo se falhar (usa defaults)
+        rodar_script("ler_briefing.py")  # continua mesmo se falhar (usa defaults)
 
         # Etapa 2 — Imagens (usa briefing + assets já salvos em assets/)
         progress_status.update({"etapa": "Gerando imagens...", "pct": 40})

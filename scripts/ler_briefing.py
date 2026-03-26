@@ -1,8 +1,6 @@
 import os
-import re
 import sys
 import json
-import time
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
@@ -73,31 +71,18 @@ Estrutura esperada:
 CONTEÚDO DA PÁGINA:
 {conteudo_html[:12000]}"""
 
-    max_tentativas = 3
-    for tentativa in range(1, max_tentativas + 1):
-        try:
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=2048,
-                temperature=0.2
-            )
-            texto = response.choices[0].message.content.strip()
-            if texto.startswith("```"):
-                texto = texto.split("```")[1]
-                if texto.startswith("json"):
-                    texto = texto[4:]
-            return json.loads(texto)
-        except Exception as e:
-            erro_str = str(e)
-            if "429" in erro_str and tentativa < max_tentativas:
-                match = re.search(r"try again in (\d+)m", erro_str)
-                espera = int(match.group(1)) * 60 + 10 if match else 60
-                espera = min(espera, 120)
-                print(f"  Rate limit — aguardando {espera}s (tentativa {tentativa}/{max_tentativas})...")
-                time.sleep(espera)
-            else:
-                raise
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=2048,
+        temperature=0.2
+    )
+    texto = response.choices[0].message.content.strip()
+    if texto.startswith("```"):
+        texto = texto.split("```")[1]
+        if texto.startswith("json"):
+            texto = texto[4:]
+    return json.loads(texto)
 
 def main():
     print("Lendo links de input/links.txt...")
