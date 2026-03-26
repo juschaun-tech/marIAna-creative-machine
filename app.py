@@ -74,27 +74,22 @@ def rodar_maquina(url_briefing: str):
         links_path.write_text(f"{url_briefing}\n", encoding="utf-8")
 
         # Etapa 1 — Briefing
-        progress_status.update({"etapa": "Lendo briefing...", "pct": 10})
-        rodar_script("ler_briefing.py")  # continua mesmo se falhar (usa defaults)
+        progress_status.update({"etapa": "Lendo briefing...", "pct": 15})
+        rodar_script("ler_briefing.py", timeout=600)  # continua mesmo se falhar (usa defaults)
 
-        # Etapa 2 — Roteiros
-        progress_status.update({"etapa": "Gerando roteiros...", "pct": 35})
-        if not rodar_script("gerar_roteiros.py"):
-            raise RuntimeError("Falha ao gerar roteiros.")
-
-        # Etapa 3 — Imagens (usa assets já salvos em assets/)
-        progress_status.update({"etapa": "Gerando imagens...", "pct": 65})
+        # Etapa 2 — Imagens (usa briefing + assets já salvos em assets/)
+        progress_status.update({"etapa": "Gerando imagens...", "pct": 40})
         rodar_script("gerar_imagens.py")
 
-        # Etapa 4 — Vídeos (timeout de 90s — não bloqueia o ZIP)
-        progress_status.update({"etapa": "Gerando vídeos...", "pct": 82})
+        # Etapa 3 — Vídeos (timeout de 90s — não bloqueia o ZIP)
+        progress_status.update({"etapa": "Gerando vídeos...", "pct": 75})
         rodar_script("gerar_videos.py", timeout=90)
 
         # Compacta outputs
         progress_status.update({"etapa": "Compactando criativos...", "pct": 95})
         zip_path = ROOT / "criativos_seazone.zip"
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-            for pasta in ["roteiros", "imagens", "videos"]:
+            for pasta in ["imagens", "videos"]:
                 dir_pasta = OUTPUT_DIR / pasta
                 if dir_pasta.exists():
                     for arq in dir_pasta.iterdir():
