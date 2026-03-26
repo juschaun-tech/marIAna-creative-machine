@@ -6,6 +6,7 @@ Gera imagens nos 3 formatos Instagram usando as fotos do usuário:
   · 16:9 — 1080×607   (landscape / reels thumbnail)
 """
 import json
+import platform
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
@@ -16,9 +17,35 @@ OUTPUTS      = ROOT / "outputs" / "imagens"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
 ERROS_LOG    = ROOT / "outputs" / "erros.log"
 
-FONT_BOLD    = "C:/Windows/Fonts/arialbd.ttf"
-FONT_REGULAR = "C:/Windows/Fonts/arial.ttf"
-FONT_ITALIC  = "C:/Windows/Fonts/ariali.ttf"
+
+def _encontrar_fonte(candidatos: list[str]) -> str | None:
+    """Retorna o primeiro caminho de fonte que existe, ou None."""
+    for c in candidatos:
+        if Path(c).exists():
+            return c
+    return None
+
+
+FONT_BOLD = _encontrar_fonte([
+    "C:/Windows/Fonts/arialbd.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+])
+
+FONT_REGULAR = _encontrar_fonte([
+    "C:/Windows/Fonts/arial.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+])
+
+FONT_ITALIC = _encontrar_fonte([
+    "C:/Windows/Fonts/ariali.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Italic.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf",
+])
 
 FORMATOS = {
     "4x5":  (1080, 1350),
