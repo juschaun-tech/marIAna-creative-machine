@@ -1,17 +1,13 @@
-"""
-ler_briefing.py
-Acessa o link da página web do briefing, extrai o conteúdo e estrutura
-as informações usando Claude. Salva em input/briefing_extraido.json
-"""
+import os
 import json
 import requests
 from pathlib import Path
-from anthropic import Anthropic
 from dotenv import load_dotenv
+from groq import Groq
 
-load_dotenv()
-client = Anthropic()
 ROOT = Path(__file__).parent.parent
+load_dotenv(ROOT / ".env", override=True)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 INPUT_DIR = ROOT / "input"
 INPUT_DIR.mkdir(exist_ok=True)
 
@@ -20,9 +16,9 @@ def ler_links() -> tuple:
     if not links_path.exists():
         raise FileNotFoundError("Coloque os links em input/links.txt")
     linhas = links_path.read_text(encoding="utf-8").strip().splitlines()
-    if len(linhas) < 2:
-        raise ValueError("input/links.txt deve ter 2 linhas: link do briefing e link do Drive")
-    return linhas[0].strip(), linhas[1].strip()
+    url_briefing = linhas[0].strip() if linhas else ""
+    url_drive = linhas[1].strip() if len(linhas) > 1 else ""
+    return url_briefing, url_drive
 
 def buscar_conteudo_pagina(url: str) -> str:
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -66,14 +62,15 @@ Estrutura esperada:
 }}
 
 CONTEÚDO DA PÁGINA:
-{conteudo_html[:15000]}"""
+{conteudo_html[:12000]}"""
 
-    response = client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=3000,
-        messages=[{"role": "user", "content": prompt}]
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=2048,
+        temperature=0.2
     )
-    texto = response.content[0].text.strip()
+    texto = response.choices[0].message.content.strip()
     if texto.startswith("```"):
         texto = texto.split("```")[1]
         if texto.startswith("json"):
@@ -87,13 +84,12 @@ def main():
         print(f"Briefing: {url_briefing}")
         print(f"Drive: {url_drive}")
 
-        # Salva o link do drive para o próximo script usar
         (INPUT_DIR / "drive_link.txt").write_text(url_drive, encoding="utf-8")
 
         print("\nAcessando página do briefing...")
         conteudo = buscar_conteudo_pagina(url_briefing)
 
-        print("Extraindo informações com Claude...")
+        print("Extraindo informações com Groq...")
         briefing = extrair_briefing(conteudo, url_briefing)
 
         saida = INPUT_DIR / "briefing_extraido.json"
@@ -111,3 +107,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
