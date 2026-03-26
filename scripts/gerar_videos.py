@@ -5,9 +5,9 @@ import requests
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
-RUNWAY_API_KEY = os.getenv("RUNWAY_API_KEY")
 ROOT = Path(__file__).parent.parent
+load_dotenv(ROOT / ".env")
+RUNWAY_API_KEY = os.environ.get("RUNWAY_API_KEY") or os.getenv("RUNWAY_API_KEY")
 ROTEIROS_DIR = ROOT / "outputs" / "roteiros"
 OUTPUTS = ROOT / "outputs" / "videos"
 OUTPUTS.mkdir(parents=True, exist_ok=True)

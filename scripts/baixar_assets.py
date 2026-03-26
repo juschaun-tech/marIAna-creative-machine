@@ -7,8 +7,8 @@ import requests
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
 ROOT = Path(__file__).parent.parent
+load_dotenv(ROOT / ".env")
 INPUT_DIR = ROOT / "input"
 ASSETS_DIR = ROOT / "assets"
 ASSETS_DIR.mkdir(exist_ok=True)
