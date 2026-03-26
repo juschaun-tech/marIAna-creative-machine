@@ -75,12 +75,12 @@ def rodar_maquina(url_briefing: str):
 
         # Etapa 1 — Briefing
         progress_status.update({"etapa": "Lendo briefing...", "pct": 10})
-        rodar_script("ler_briefing.py")  # continua mesmo se falhar (usa defaults)
+        rodar_script("ler_briefing.py", timeout=600)  # continua mesmo se falhar (usa defaults)
 
-        # Etapa 2 — Roteiros
+        # Etapa 2 — Roteiros (timeout alto por causa de retry em rate limit)
         progress_status.update({"etapa": "Gerando roteiros...", "pct": 35})
-        if not rodar_script("gerar_roteiros.py"):
-            raise RuntimeError("Falha ao gerar roteiros.")
+        if not rodar_script("gerar_roteiros.py", timeout=600):
+            raise RuntimeError("Falha ao gerar roteiros. Possível rate limit do Groq — tente novamente em alguns minutos.")
 
         # Etapa 3 — Imagens (usa assets já salvos em assets/)
         progress_status.update({"etapa": "Gerando imagens...", "pct": 65})
