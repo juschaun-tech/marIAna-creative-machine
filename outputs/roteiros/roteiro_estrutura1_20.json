@@ -1,0 +1,45 @@
+{
+  "estrutura": 1,
+  "duracao": "20s",
+  "narracao_mariana": "Localizada no Campeche, essa é uma oportunidade de investimento com ROI de 8,5% e rendimento mensal de R$ 2.500,00.",
+  "descricao_visual": [
+    {
+      "take": 1,
+      "duracao_aprox": "4s",
+      "descricao": "Vista aérea da praia de Campeche, mostrando a beleza natural do local"
+    },
+    {
+      "take": 2,
+      "duracao_aprox": "4s",
+      "descricao": "Fachada do Novo Campeche Spot, destacando a arquitetura moderna e sofisticada"
+    },
+    {
+      "take": 3,
+      "duracao_aprox": "6s",
+      "descricao": "MarIAna aparece na praia, com um tom natural e confiante, enquanto fala sobre o investimento"
+    },
+    {
+      "take": 4,
+      "duracao_aprox": "6s",
+      "descricao": "Destaque financeiro, com gráficos e números que ilustram o ROI e o rendimento mensal"
+    }
+  ],
+  "texto_na_tela": [
+    {
+      "momento": "take 2",
+      "texto": "Novo Campeche Spot",
+      "destaque": true
+    },
+    {
+      "momento": "take 3",
+      "texto": "ROI: 8,5%",
+      "destaque": true
+    },
+    {
+      "momento": "take 3",
+      "texto": "R$ 2.500,00/mês",
+      "destaque": true
+    }
+  ],
+  "cta_final": "Acesse e simule o seu retorno com a Seazone."
+}

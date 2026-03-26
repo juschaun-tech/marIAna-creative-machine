@@ -1,0 +1,111 @@
+ler_briefing: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash
+Please retry in 45.825852786s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.0-flash"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+, retry_delay {
+  seconds: 45
+}
+]
+ler_briefing: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+ler_briefing: "Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
+ler_briefing: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZRvi5LeZk8fW69ybA2TA'}
+ler_briefing: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZRwGWvBECuc75wmebUGC'}
+Imagem 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/flux-pro/v1.1/requests/019d2b84-ece5-7a73-bd7a-4045ec515243/status
+Imagem 2: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/flux-pro/v1.1/requests/019d2b85-077f-7a33-8228-0915b88aab68/status
+Imagem 3: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/flux-pro/v1.1/requests/019d2b85-21ec-75f3-bc1d-9865f849a828/status
+Imagem 4: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/flux-pro/v1.1/requests/019d2b85-3c48-7163-bd88-6f2c629a95d9/status
+Imagem 5: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/flux-pro/v1.1/requests/019d2b85-55a0-7683-91a1-5bf52c23483b/status
+Imagem 1: cannot identify image file 'C:\\Users\\Win11\\Documentos\\maquina-criativos\\assets\\asset_1.jpg'
+Imagem 3: cannot identify image file 'C:\\Users\\Win11\\Documentos\\maquina-criativos\\assets\\asset_11.jpg'
+ler_briefing: input/links.txt deve ter 2 linhas: link do briefing e link do Drive
+Video 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bcf-7003-7091-957a-a92412901d27/status
+Video 2: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bcf-9ddd-71e2-8520-dbd330e55a47/status
+Video 3: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bcf-cba6-7070-a057-9d3a2644986c/status
+Video 4: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bcf-f92c-7481-aac5-d3e2629b9a81/status
+ler_briefing: input/links.txt deve ter 2 linhas: link do briefing e link do Drive
+Video 5: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd0-266c-7742-b18f-b4452c77e046/status
+Video 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd0-903d-7b33-a9e3-b2b2f366f5c5/status
+Video 2: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd0-be24-7ec1-b502-b8ac89db930a/status
+ler_briefing: input/links.txt deve ter 2 linhas: link do briefing e link do Drive
+Video 3: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd0-ec46-7281-86b8-78753188dbf8/status
+Video 4: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd1-1ab1-78e3-9e20-ddaac17e4b60/status
+Video 5: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd1-490f-75d2-b190-915e7b30a9ea/status
+Video 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd1-c90f-7e23-ac6b-c030f292f6e3/status
+Video 2: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd1-f732-7f81-b431-c02156475182/status
+Video 3: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd2-246d-7212-94b3-5db106839b45/status
+Video 4: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd2-5176-7b42-a074-5fc2ddd71557/status
+Video 5: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd2-7f53-7c82-88c3-e03b0511dd88/status
+gerar_imagens: nenhum asset em assets/
+Video 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd6-1f26-7861-b03a-4d3373b48bc3/status
+Video 2: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd6-4d51-7c83-bc9d-6b8c3d77afba/status
+Video 3: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd6-7b0b-7e00-9c64-e00d2e2f1ae0/status
+Video 4: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd6-a8ec-7602-ab4e-3429a9210721/status
+Video 5: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd6-d6f8-7361-9a4a-e97aa8b4b9f6/status
+Roteiro 4: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 96886, Requested 3282. Please try again in 2m25.152s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 5: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 96886, Requested 3263. Please try again in 2m8.735999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Video 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd8-09dc-7983-b52c-6e46dddcb0d6/status
+Video 2: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd8-36dc-7171-bc46-e59f63c32f33/status
+Video 3: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2bd8-63fd-7263-bd88-08b0f2cabf6a/status
+ler_briefing: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 96219, Requested 4870. Please try again in 15m40.896s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 2: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99497, Requested 2868. Please try again in 34m3.36s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 3: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99497, Requested 2868. Please try again in 34m3.36s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 4: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99497, Requested 2872. Please try again in 34m6.816s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 5: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99497, Requested 2868. Please try again in 34m3.36s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Video 1: 405 Client Error: Method Not Allowed for url: https://queue.fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/019d2be0-e363-7a42-a7ef-a675a6895401/status
+ler_briefing: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98914, Requested 4870. Please try again in 54m29.375999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 1: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98913, Requested 2872. Please try again in 25m42.24s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 2: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98913, Requested 2868. Please try again in 25m38.784s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 3: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98913, Requested 2868. Please try again in 25m38.784s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 4: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98913, Requested 2872. Please try again in 25m42.24s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 5: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98913, Requested 2868. Please try again in 25m38.784s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 1: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98561, Requested 2872. Please try again in 20m38.112s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 2: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98561, Requested 2868. Please try again in 20m34.656s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 3: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98561, Requested 2868. Please try again in 20m34.656s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 4: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98561, Requested 2872. Please try again in 20m38.112s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 5: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98561, Requested 2868. Please try again in 20m34.656s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+ler_briefing: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98454, Requested 4870. Please try again in 47m51.935999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 1: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98452, Requested 2872. Please try again in 19m3.936s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 2: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98452, Requested 2868. Please try again in 19m0.48s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 3: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98452, Requested 2868. Please try again in 19m0.48s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 4: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98452, Requested 2872. Please try again in 19m3.936s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+Roteiro 5: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kmnqadgxe21tjbf4wry4z7zy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98452, Requested 2868. Please try again in 19m0.48s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}

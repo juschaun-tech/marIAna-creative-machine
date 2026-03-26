@@ -1,0 +1,45 @@
+{
+  "estrutura": 2,
+  "duracao": "40s",
+  "narracao_mariana": "O Novo Campeche Spot II oferece uma rentabilidade anual de 8,5% e um ROI de 8,5%. Com um rendimento mensal de R$ 1.417,00, é um investimento seguro e rentável no coração do Campeche, em Florianópolis.",
+  "descricao_visual": [
+    {
+      "take": 1,
+      "duracao_aprox": "5s",
+      "descricao": "Vista aérea da região do Campeche, mostrando a proximidade com a praia e a beleza natural da área"
+    },
+    {
+      "take": 2,
+      "duracao_aprox": "15s",
+      "descricao": "MarIAna aparece em cena, com um fundo neutro, falando diretamente para a câmera sobre os benefícios do investimento"
+    },
+    {
+      "take": 3,
+      "duracao_aprox": "10s",
+      "descricao": "Fachada do empreendimento Novo Campeche Spot II, destacando sua arquitetura moderna e a localização privilegiada"
+    },
+    {
+      "take": 4,
+      "duracao_aprox": "10s",
+      "descricao": "Rooftop com vista para a cidade, dando uma sensação de amplitude e liberdade"
+    }
+  ],
+  "texto_na_tela": [
+    {
+      "momento": "take 2",
+      "texto": "ROI: 8,5%",
+      "destaque": true
+    },
+    {
+      "momento": "take 2",
+      "texto": "Rendimiento mensal: R$ 1.417,00",
+      "destaque": true
+    },
+    {
+      "momento": "take 3",
+      "texto": "Novo Campeche Spot II",
+      "destaque": false
+    }
+  ],
+  "cta_final": "Acesse e simule o seu retorno com a Seazone."
+}

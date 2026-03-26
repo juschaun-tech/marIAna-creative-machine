@@ -1,0 +1,60 @@
+{
+  "nome_empreendimento": "Novo Campeche Spot II",
+  "endereco": "Av. Campeche, 414 - Campeche, Florianópolis - SC",
+  "dados_financeiros": {
+    "ticket_medio": "R$ 420.000,00",
+    "menor_cota": "R$ 210.000,00",
+    "rentabilidade_anual": "8,5% a.a.",
+    "rendimento_mensal": "R$ 1.417,00",
+    "roi": "8,5%",
+    "valorizacao": "10% a 12% a.a.",
+    "num_cotas": "4"
+  },
+  "localizacao": {
+    "bairro": "Campeche",
+    "cidade": "Florianópolis",
+    "destaques": [
+      "Praia do Campeche",
+      "Aeroporto Internacional de Florianópolis",
+      "Universidade Federal de Santa Catarina"
+    ]
+  },
+  "produto": {
+    "diferenciais": [
+      "Apartamentos de 2 e 3 dormitórios",
+      "Áreas de lazer com piscina, academia e salão de festas",
+      "Localização privilegiada em uma das praias mais bonitas de Florianópolis"
+    ],
+    "estrutura_videos": [
+      "Vídeo de apresentação do empreendimento",
+      "Vídeo de como será o apartamento",
+      "Vídeo de depoimentos de clientes satisfeitos"
+    ]
+  },
+  "publico_alvo": [
+    "Famílias",
+    "Jovens casais",
+    "Pessoas que buscam um investimento seguro e rentável"
+  ],
+  "dos": [
+    "Destacar a localização privilegiada do empreendimento",
+    "Focar nos diferenciais do produto",
+    "Oferecer opções de financiamento e parcelamento"
+  ],
+  "donts": [
+    "Não destacar a concorrência",
+    "Não fazer comparações negativas com outros empreendimentos",
+    "Não usar linguagem técnica ou complicada"
+  ],
+  "pontos_fortes_obrigatorios": [
+    "Localização",
+    "Diferenciais do produto",
+    "Rentabilidade e valorização"
+  ],
+  "regras_visuais": [
+    "Usar cores vibrantes e alegres",
+    "Incluir imagens de alta qualidade do empreendimento e da região",
+    "Manter a identidade visual da marca"
+  ],
+  "pitch_central": "O Novo Campeche Spot II é um empreendimento imobiliário localizado em uma das praias mais bonitas de Florianópolis, oferecendo apartamentos de 2 e 3 dormitórios com áreas de lazer e uma localização privilegiada. Com uma rentabilidade anual de 8,5% e valorização de 10% a 12% a.a., é um investimento seguro e rentável para famílias, jovens casais e pessoas que buscam um patrimônio de valor."
+}

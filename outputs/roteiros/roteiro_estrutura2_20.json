@@ -1,0 +1,45 @@
+{
+  "estrutura": 2,
+  "duracao": "20s",
+  "narracao_mariana": "8,5% de ROI, R$ 2.500 de rendimento mensal, no Campeche.",
+  "descricao_visual": [
+    {
+      "take": 1,
+      "duracao_aprox": "5s",
+      "descricao": "Vista aérea do bairro Campeche, destacando a proximidade com o aeroporto e a universidade"
+    },
+    {
+      "take": 2,
+      "duracao_aprox": "5s",
+      "descricao": "MarIAna aparece em cena, com um fundo neutro, falando sobre o ROI e o rendimento mensal"
+    },
+    {
+      "take": 3,
+      "duracao_aprox": "5s",
+      "descricao": "Fachada do empreendimento Novo Campeche Spot, destacando a qualidade e o conforto dos apartamentos"
+    },
+    {
+      "take": 4,
+      "duracao_aprox": "5s",
+      "descricao": "Rooftop do empreendimento com vista para o bairro, MarIAna encerrando com um call to action"
+    }
+  ],
+  "texto_na_tela": [
+    {
+      "momento": "take 2",
+      "texto": "8,5% ROI",
+      "destaque": true
+    },
+    {
+      "momento": "take 2",
+      "texto": "R$ 2.500 rendimento mensal",
+      "destaque": true
+    },
+    {
+      "momento": "take 3",
+      "texto": "Novo Campeche Spot",
+      "destaque": false
+    }
+  ],
+  "cta_final": "Fale com a Seazone."
+}
