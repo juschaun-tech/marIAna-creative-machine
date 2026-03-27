@@ -1,12 +1,21 @@
 import os
+import re
+import sys
 import json
+import time
 from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 
 ROOT = Path(__file__).parent.parent
-load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+load_dotenv(ROOT / ".env")
+
+GROQ_KEY = os.environ.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
+if not GROQ_KEY:
+    print("ERRO FATAL: GROQ_API_KEY não está definida. Configure no Railway ou no .env")
+    sys.exit(1)
+
+client = Groq(api_key=GROQ_KEY)
 OUTPUTS = ROOT / "outputs" / "roteiros"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
 
@@ -63,18 +72,32 @@ FORMATO DE RESPOSTA (JSON puro, sem markdown):
 OBRIGATÓRIO: incluir ROI, localização, rendimento mensal e fachada conforme o briefing.
 PROIBIDO: pé na areia, distância exata da praia, vista mar nas unidades, urgência artificial."""
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=2048,
-        temperature=0.7
-    )
-    texto = response.choices[0].message.content.strip()
-    if texto.startswith("```"):
-        texto = texto.split("```")[1]
-        if texto.startswith("json"):
-            texto = texto[4:]
-    return json.loads(texto)
+    max_tentativas = 3
+    for tentativa in range(1, max_tentativas + 1):
+        try:
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=2048,
+                temperature=0.7
+            )
+            texto = response.choices[0].message.content.strip()
+            if texto.startswith("```"):
+                texto = texto.split("```")[1]
+                if texto.startswith("json"):
+                    texto = texto[4:]
+            return json.loads(texto)
+        except Exception as e:
+            erro_str = str(e)
+            if "429" in erro_str and tentativa < max_tentativas:
+                # Extrai tempo de espera da mensagem do Groq (ex: "35m7.29s")
+                match = re.search(r"try again in (\d+)m", erro_str)
+                espera = int(match.group(1)) * 60 + 10 if match else 60
+                espera = min(espera, 120)  # máx 2 minutos de espera
+                print(f"    Rate limit — aguardando {espera}s (tentativa {tentativa}/{max_tentativas})...")
+                time.sleep(espera)
+            else:
+                raise
 
 def main():
     print("Gerando roteiros com Groq (LLaMA 3.3)...\n")
@@ -98,6 +121,10 @@ def main():
         json.dumps(roteiros, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(f"\n{len(roteiros)}/5 roteiros gerados.")
+
+    if not roteiros:
+        print("ERRO FATAL: Nenhum roteiro gerado. Verifique o rate limit do Groq.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

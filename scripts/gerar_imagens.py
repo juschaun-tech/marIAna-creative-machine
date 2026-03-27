@@ -10,15 +10,46 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT         = Path(__file__).parent.parent
-ROTEIROS_DIR = ROOT / "outputs" / "roteiros"
 ASSETS_DIR   = ROOT / "assets"
 OUTPUTS      = ROOT / "outputs" / "imagens"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
 ERROS_LOG    = ROOT / "outputs" / "erros.log"
 
-FONT_BOLD    = "C:/Windows/Fonts/arialbd.ttf"
-FONT_REGULAR = "C:/Windows/Fonts/arial.ttf"
-FONT_ITALIC  = "C:/Windows/Fonts/ariali.ttf"
+# ── Fontes bundled (fonts/ no repo) — garante consistência em qualquer ambiente
+_FONTS_DIR = ROOT / "fonts"
+
+
+def _encontrar_fonte(candidatos: list[str]) -> str:
+    """Retorna o primeiro caminho de fonte que existe. Lança erro se nenhum."""
+    for c in candidatos:
+        if Path(c).exists():
+            return str(c)
+    raise FileNotFoundError(f"Nenhuma fonte encontrada: {candidatos}")
+
+
+FONT_BOLD = _encontrar_fonte([
+    str(_FONTS_DIR / "LiberationSans-Bold.ttf"),
+    "C:/Windows/Fonts/arialbd.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+])
+
+FONT_REGULAR = _encontrar_fonte([
+    str(_FONTS_DIR / "LiberationSans-Regular.ttf"),
+    "C:/Windows/Fonts/arial.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+])
+
+FONT_ITALIC = _encontrar_fonte([
+    str(_FONTS_DIR / "LiberationSans-Italic.ttf"),
+    "C:/Windows/Fonts/ariali.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Italic.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf",
+])
 
 FORMATOS = {
     "4x5":  (1080, 1350),
@@ -31,10 +62,7 @@ FORMATOS = {
 
 def fonte(tamanho: int, estilo: str = "bold") -> ImageFont.FreeTypeFont:
     mapa = {"bold": FONT_BOLD, "regular": FONT_REGULAR, "italic": FONT_ITALIC}
-    try:
-        return ImageFont.truetype(mapa.get(estilo, FONT_BOLD), tamanho)
-    except Exception:
-        return ImageFont.load_default()
+    return ImageFont.truetype(mapa.get(estilo, FONT_BOLD), tamanho)
 
 
 def crop_center(img: Image.Image, w: int, h: int) -> Image.Image:
@@ -110,9 +138,10 @@ def draw_rodape(draw, W, H, logo_fnt, cta_fnt, cta_linha1, cta_linha2, pad=56):
     draw.text((W - pad - (bb1[2] - bb1[0]), H - 100), cta_linha1,
               font=cta_fnt, fill=(255, 255, 255))
     if cta_linha2:
-        bb2 = draw.textbbox((0, 0), cta_linha2, font=fonte(cta_fnt.size, "italic"))
+        cta_italic = ImageFont.truetype(FONT_ITALIC, cta_fnt.size)
+        bb2 = draw.textbbox((0, 0), cta_linha2, font=cta_italic)
         draw.text((W - pad - (bb2[2] - bb2[0]), H - 100 + (bb1[3] - bb1[1]) + 4),
-                  cta_linha2, font=fonte(cta_fnt.size, "italic"), fill=(255, 220, 50))
+                  cta_linha2, font=cta_italic, fill=(252, 96, 88))
 
 
 def split_cta(cta: str):
@@ -133,7 +162,7 @@ def carregar_briefing() -> dict:
 
 # ── Geradores por formato ─────────────────────────────────────────────────────
 
-def gerar_4x5(asset, roteiro, destino, briefing, idx=1):
+def gerar_4x5(asset, destino, briefing, idx=1):
     """1080×1350 — texto em cima, foto abaixo."""
     W, H = 1080, 1350
     img = crop_center(Image.open(asset).convert("RGB"), W, H).convert("RGBA")
@@ -141,23 +170,23 @@ def gerar_4x5(asset, roteiro, destino, briefing, idx=1):
     img = Image.alpha_composite(img, _rodape_overlay(W, H, 0.18, 170))
 
     draw = ImageDraw.Draw(img)
-    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, roteiro, idx)
+    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, idx)
 
     y = 68
     y = texto_centrado(draw, y, "SEAZONE INVESTIMENTOS", fonte(28, "regular"), (80, 80, 80), W) + 14
     y = texto_wrap_center(draw, y, headline, fonte(90, "bold"), (15, 15, 15), W - 100, W, gap=2) + 12
     y = texto_wrap_center(draw, y, subtitulo, fonte(36, "regular"), (40, 40, 40), W - 140, W, gap=4) + 18
     y = draw_pill(draw, W // 2, y, f"  {bairro}, {cidade} - SC",
-                  fonte(32, "bold"), (210, 35, 35), (255, 255, 255)) + 20
+                  fonte(32, "bold"), (0, 85, 255), (255, 255, 255)) + 20
     if dado:
         texto_centrado(draw, y, dado, fonte(34, "bold"), (15, 15, 15), W)
 
-    cta1, cta2 = split_cta(_cta(roteiro))
+    cta1, cta2 = split_cta(CTA_PADRAO)
     draw_rodape(draw, W, H, fonte(42, "bold"), fonte(30, "regular"), cta1, cta2)
     img.convert("RGB").save(destino, "JPEG", quality=93)
 
 
-def gerar_1x1(asset, roteiro, destino, briefing, idx=1):
+def gerar_1x1(asset, destino, briefing, idx=1):
     """1080×1080 — texto em faixa no topo, foto ocupa metade inferior."""
     W, H = 1080, 1080
     img = crop_center(Image.open(asset).convert("RGB"), W, H).convert("RGBA")
@@ -165,23 +194,23 @@ def gerar_1x1(asset, roteiro, destino, briefing, idx=1):
     img = Image.alpha_composite(img, _rodape_overlay(W, H, 0.20, 170))
 
     draw = ImageDraw.Draw(img)
-    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, roteiro, idx)
+    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, idx)
 
     y = 56
     y = texto_centrado(draw, y, "SEAZONE INVESTIMENTOS", fonte(26, "regular"), (80, 80, 80), W) + 10
     y = texto_wrap_center(draw, y, headline, fonte(80, "bold"), (15, 15, 15), W - 80, W, gap=2) + 10
     y = texto_wrap_center(draw, y, subtitulo, fonte(32, "regular"), (40, 40, 40), W - 120, W, gap=4) + 14
     y = draw_pill(draw, W // 2, y, f"  {bairro}, {cidade} - SC",
-                  fonte(30, "bold"), (210, 35, 35), (255, 255, 255)) + 16
+                  fonte(30, "bold"), (0, 85, 255), (255, 255, 255)) + 16
     if dado:
         texto_centrado(draw, y, dado, fonte(30, "bold"), (15, 15, 15), W)
 
-    cta1, cta2 = split_cta(_cta(roteiro))
+    cta1, cta2 = split_cta(CTA_PADRAO)
     draw_rodape(draw, W, H, fonte(38, "bold"), fonte(26, "regular"), cta1, cta2, pad=48)
     img.convert("RGB").save(destino, "JPEG", quality=93)
 
 
-def gerar_16x9(asset, roteiro, destino, briefing, idx=1):
+def gerar_16x9(asset, destino, briefing, idx=1):
     """1080×607 — foto à direita, faixa escura à esquerda com texto."""
     W, H = 1080, 607
     img = crop_center(Image.open(asset).convert("RGB"), W, H).convert("RGBA")
@@ -196,7 +225,7 @@ def gerar_16x9(asset, roteiro, destino, briefing, idx=1):
     img = Image.alpha_composite(img, _rodape_overlay(W, H, 0.22, 150))
 
     draw = ImageDraw.Draw(img)
-    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, roteiro, idx)
+    headline, subtitulo, dado, bairro, cidade = _conteudo(briefing, idx)
 
     pad = 48
     y = 36
@@ -218,15 +247,15 @@ def gerar_16x9(asset, roteiro, destino, briefing, idx=1):
     pill_txt = f"  {bairro}, {cidade} - SC"
     pbb = draw.textbbox((0, 0), pill_txt, font=fonte(22, "bold"))
     pw, ph = pbb[2] - pbb[0] + 44, pbb[3] - pbb[1] + 22
-    draw.rounded_rectangle([pad, y, pad + pw, y + ph], radius=ph // 2, fill=(210, 35, 35))
+    draw.rounded_rectangle([pad, y, pad + pw, y + ph], radius=ph // 2, fill=(0, 85, 255))
     draw.text((pad + 22, y + 11), pill_txt, font=fonte(22, "bold"), fill=(255, 255, 255))
     y += ph + 14
 
     if dado:
-        draw.text((pad, y), dado, font=fonte(26, "bold"), fill=(255, 255, 230))
+        draw.text((pad, y), dado, font=fonte(26, "bold"), fill=(252, 96, 88))
 
     draw.text((pad, H - 72), "seazone", font=fonte(32, "bold"), fill=(255, 255, 255))
-    cta1, cta2 = split_cta(_cta(roteiro))
+    cta1, cta2 = split_cta(CTA_PADRAO)
     cta_fnt = fonte(22, "regular")
     bb1 = draw.textbbox((0, 0), cta1, font=cta_fnt)
     draw.text((W - 44 - (bb1[2] - bb1[0]), H - 72), cta1, font=cta_fnt, fill=(255, 255, 255))
@@ -246,14 +275,14 @@ def _rodape_overlay(W, H, pct, alpha_max):
     d = ImageDraw.Draw(ov)
     for y in range(h_faixa):
         a = int(alpha_max * (1 - y / h_faixa))
-        d.line([(0, H - h_faixa + y), (W, H - h_faixa + y)], fill=(0, 0, 0, a))
+        d.line([(0, H - h_faixa + y), (W, H - h_faixa + y)], fill=(0, 20, 61, a))
     return ov
 
 
-def _conteudo(briefing, roteiro, idx: int) -> dict:
+def _conteudo(briefing, idx: int) -> dict:
     """
     Retorna headline, subtitulo e dado_financeiro diferentes por índice (1-5),
-    usando exclusivamente dados do briefing + roteiro — sem inventar nada.
+    usando exclusivamente dados do briefing — sem inventar nada.
     """
     fin  = briefing.get("dados_financeiros", {})
     loc  = briefing.get("localizacao", {})
@@ -262,10 +291,6 @@ def _conteudo(briefing, roteiro, idx: int) -> dict:
     nome   = briefing.get("nome_empreendimento", "Novo Empreendimento")
     bairro = loc.get("bairro", "Campeche")
     cidade = loc.get("cidade", "Florianópolis")
-
-    # Headline: texto de destaque do roteiro, senão nome do empreendimento
-    textos   = roteiro.get("texto_na_tela", [])
-    destaque = next((t["texto"] for t in textos if t.get("destaque")), None)
 
     roi        = fin.get("roi", "")
     rend       = fin.get("rendimento_mensal", "")
@@ -279,27 +304,27 @@ def _conteudo(briefing, roteiro, idx: int) -> dict:
 
     variantes = {
         1: {
-            "headline":   destaque or nome,
+            "headline":   nome,
             "subtitulo":  "gere renda passiva investindo em",
             "dado":       f"ROI {roi} ao ano  ·  {rend}/mês" if roi and rend else f"ROI {roi} ao ano",
         },
         2: {
-            "headline":   f"A partir de {menor_cota}" if menor_cota else destaque or nome,
+            "headline":   f"A partir de {menor_cota}" if menor_cota else nome,
             "subtitulo":  f"rentabilidade de {rent_anual}" if rent_anual else "investimento acessível em",
             "dado":       f"Ticket médio {ticket}  ·  {num_cotas} cotas" if ticket else f"Valorização {valorizacao}",
         },
         3: {
-            "headline":   destaques[0] if destaques else destaque or nome,
+            "headline":   destaques[0] if destaques else nome,
             "subtitulo":  f"próximo a {destaques[1]}" if len(destaques) > 1 else "no melhor da",
             "dado":       f"{bairro}, {cidade}  ·  ROI {roi}" if roi else f"{bairro}, {cidade}",
         },
         4: {
-            "headline":   diferenciais[0] if diferenciais else destaque or nome,
+            "headline":   diferenciais[0] if diferenciais else nome,
             "subtitulo":  diferenciais[1] if len(diferenciais) > 1 else "em",
             "dado":       f"Rendimento {rend}/mês  ·  Valorização {valorizacao}" if rend and valorizacao else f"ROI {roi}",
         },
         5: {
-            "headline":   destaque or nome,
+            "headline":   nome,
             "subtitulo":  f"valorização de {valorizacao} ao ano" if valorizacao else "invista agora em",
             "dado":       f"ROI {roi}  ·  Rentabilidade {rent_anual}" if roi and rent_anual else f"Rendimento {rend}",
         },
@@ -309,8 +334,7 @@ def _conteudo(briefing, roteiro, idx: int) -> dict:
     return v["headline"], v["subtitulo"], v["dado"], bairro, cidade
 
 
-def _cta(roteiro):
-    return roteiro.get("cta_final", "Acesse e simule o seu retorno com a Seazone.")
+CTA_PADRAO = "Acesse e simule o seu retorno com a Seazone."
 
 
 def _quebrar(texto, fnt, draw, max_w):
@@ -353,18 +377,11 @@ GERADORES = {
 }
 
 
+NUM_IMAGENS = 5
+
+
 def main():
     print("Gerando imagens (4:5 · 1:1 · 16:9)...\n")
-
-    rp = ROTEIROS_DIR / "todos_roteiros.json"
-    if not rp.exists():
-        print("Execute gerar_roteiros.py primeiro.")
-        return
-
-    roteiros = json.loads(rp.read_text(encoding="utf-8"))
-    if not roteiros:
-        print("Nenhum roteiro encontrado.")
-        return
 
     assets = listar_assets()
     if not assets:
@@ -374,20 +391,18 @@ def main():
         return
 
     briefing = carregar_briefing()
-    total = len(roteiros[:5]) * len(GERADORES)
-    print(f"{len(assets)} foto(s) · {len(roteiros[:5])} roteiros · {total} imagens\n")
+    total = NUM_IMAGENS * len(GERADORES)
+    print(f"{len(assets)} foto(s) · {NUM_IMAGENS} variantes · {total} imagens\n")
 
     geradas = 0
-    for i, roteiro in enumerate(roteiros[:5], 1):
-        est = roteiro.get("estrutura", i)
-        dur = roteiro.get("duracao", "?").replace("s", "")
+    for i in range(1, NUM_IMAGENS + 1):
         asset = assets[(i - 1) % len(assets)]
 
         for fmt, fn in GERADORES.items():
-            nome = f"imagem_{i:02d}_{fmt}_estrutura{est}_{dur}.jpg"
+            nome = f"imagem_{i:02d}_{fmt}.jpg"
             print(f"  {nome}  ({asset.name})")
             try:
-                fn(asset, roteiro, OUTPUTS / nome, briefing, idx=i)
+                fn(asset, OUTPUTS / nome, briefing, idx=i)
                 geradas += 1
             except Exception as e:
                 print(f"    Erro: {e}")

@@ -10,6 +10,14 @@ from dotenv import load_dotenv
 
 load_dotenv()  # carrega .env local se existir, sem sobrescrever vars da plataforma
 
+# Log de diagnóstico — mostra quais chaves estão configuradas (sem expor valores)
+for var in ["GROQ_API_KEY", "RUNWAY_API_KEY"]:
+    valor = os.environ.get(var)
+    if valor:
+        print(f"[env] {var} = configurada ({len(valor)} chars)")
+    else:
+        print(f"[env] ⚠ {var} = NÃO CONFIGURADA")
+
 app = Flask(__name__)
 
 @app.after_request
@@ -39,12 +47,14 @@ def rodar_script(nome_script: str, timeout: int = 300) -> bool:
     """Executa um script e retorna True se passou, False se falhou."""
     script_path = ROOT / "scripts" / nome_script
     try:
+        env = os.environ.copy()
         result = subprocess.run(
             [PYTHON, str(script_path)],
             capture_output=True,
             text=True,
             cwd=str(ROOT),
-            timeout=timeout
+            timeout=timeout,
+            env=env
         )
         print(f"\n=== {nome_script} ===")
         print(result.stdout)
@@ -64,27 +74,22 @@ def rodar_maquina(url_briefing: str):
         links_path.write_text(f"{url_briefing}\n", encoding="utf-8")
 
         # Etapa 1 — Briefing
-        progress_status.update({"etapa": "Lendo briefing...", "pct": 10})
+        progress_status.update({"etapa": "Lendo briefing...", "pct": 15})
         rodar_script("ler_briefing.py")  # continua mesmo se falhar (usa defaults)
 
-        # Etapa 2 — Roteiros
-        progress_status.update({"etapa": "Gerando roteiros...", "pct": 35})
-        if not rodar_script("gerar_roteiros.py"):
-            raise RuntimeError("Falha ao gerar roteiros.")
-
-        # Etapa 3 — Imagens (usa assets já salvos em assets/)
-        progress_status.update({"etapa": "Gerando imagens...", "pct": 65})
+        # Etapa 2 — Imagens (usa briefing + assets já salvos em assets/)
+        progress_status.update({"etapa": "Gerando imagens...", "pct": 40})
         rodar_script("gerar_imagens.py")
 
-        # Etapa 4 — Vídeos (timeout de 90s — não bloqueia o ZIP)
-        progress_status.update({"etapa": "Gerando vídeos...", "pct": 82})
+        # Etapa 3 — Vídeos (timeout de 90s — não bloqueia o ZIP)
+        progress_status.update({"etapa": "Gerando vídeos...", "pct": 75})
         rodar_script("gerar_videos.py", timeout=90)
 
         # Compacta outputs
         progress_status.update({"etapa": "Compactando criativos...", "pct": 95})
         zip_path = ROOT / "criativos_seazone.zip"
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-            for pasta in ["roteiros", "imagens", "videos"]:
+            for pasta in ["imagens", "videos"]:
                 dir_pasta = OUTPUT_DIR / pasta
                 if dir_pasta.exists():
                     for arq in dir_pasta.iterdir():
