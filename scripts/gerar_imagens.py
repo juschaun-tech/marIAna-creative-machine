@@ -141,7 +141,7 @@ def draw_rodape(draw, W, H, logo_fnt, cta_fnt, cta_linha1, cta_linha2, pad=56):
         cta_italic = ImageFont.truetype(FONT_ITALIC, cta_fnt.size)
         bb2 = draw.textbbox((0, 0), cta_linha2, font=cta_italic)
         draw.text((W - pad - (bb2[2] - bb2[0]), H - 100 + (bb1[3] - bb1[1]) + 4),
-                  cta_linha2, font=cta_italic, fill=(255, 220, 50))
+                  cta_linha2, font=cta_italic, fill=(252, 96, 88))
 
 
 def split_cta(cta: str):
@@ -177,7 +177,7 @@ def gerar_4x5(asset, destino, briefing, idx=1):
     y = texto_wrap_center(draw, y, headline, fonte(90, "bold"), (15, 15, 15), W - 100, W, gap=2) + 12
     y = texto_wrap_center(draw, y, subtitulo, fonte(36, "regular"), (40, 40, 40), W - 140, W, gap=4) + 18
     y = draw_pill(draw, W // 2, y, f"  {bairro}, {cidade} - SC",
-                  fonte(32, "bold"), (210, 35, 35), (255, 255, 255)) + 20
+                  fonte(32, "bold"), (0, 85, 255), (255, 255, 255)) + 20
     if dado:
         texto_centrado(draw, y, dado, fonte(34, "bold"), (15, 15, 15), W)
 
@@ -201,7 +201,7 @@ def gerar_1x1(asset, destino, briefing, idx=1):
     y = texto_wrap_center(draw, y, headline, fonte(80, "bold"), (15, 15, 15), W - 80, W, gap=2) + 10
     y = texto_wrap_center(draw, y, subtitulo, fonte(32, "regular"), (40, 40, 40), W - 120, W, gap=4) + 14
     y = draw_pill(draw, W // 2, y, f"  {bairro}, {cidade} - SC",
-                  fonte(30, "bold"), (210, 35, 35), (255, 255, 255)) + 16
+                  fonte(30, "bold"), (0, 85, 255), (255, 255, 255)) + 16
     if dado:
         texto_centrado(draw, y, dado, fonte(30, "bold"), (15, 15, 15), W)
 
@@ -247,12 +247,12 @@ def gerar_16x9(asset, destino, briefing, idx=1):
     pill_txt = f"  {bairro}, {cidade} - SC"
     pbb = draw.textbbox((0, 0), pill_txt, font=fonte(22, "bold"))
     pw, ph = pbb[2] - pbb[0] + 44, pbb[3] - pbb[1] + 22
-    draw.rounded_rectangle([pad, y, pad + pw, y + ph], radius=ph // 2, fill=(210, 35, 35))
+    draw.rounded_rectangle([pad, y, pad + pw, y + ph], radius=ph // 2, fill=(0, 85, 255))
     draw.text((pad + 22, y + 11), pill_txt, font=fonte(22, "bold"), fill=(255, 255, 255))
     y += ph + 14
 
     if dado:
-        draw.text((pad, y), dado, font=fonte(26, "bold"), fill=(255, 255, 230))
+        draw.text((pad, y), dado, font=fonte(26, "bold"), fill=(252, 96, 88))
 
     draw.text((pad, H - 72), "seazone", font=fonte(32, "bold"), fill=(255, 255, 255))
     cta1, cta2 = split_cta(CTA_PADRAO)
@@ -275,7 +275,7 @@ def _rodape_overlay(W, H, pct, alpha_max):
     d = ImageDraw.Draw(ov)
     for y in range(h_faixa):
         a = int(alpha_max * (1 - y / h_faixa))
-        d.line([(0, H - h_faixa + y), (W, H - h_faixa + y)], fill=(0, 0, 0, a))
+        d.line([(0, H - h_faixa + y), (W, H - h_faixa + y)], fill=(0, 20, 61, a))
     return ov
 
 
