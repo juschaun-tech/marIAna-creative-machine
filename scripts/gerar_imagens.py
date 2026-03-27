@@ -6,7 +6,6 @@ Gera imagens nos 3 formatos Instagram usando as fotos do usuário:
   · 16:9 — 1080×607   (landscape / reels thumbnail)
 """
 import json
-import platform
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
@@ -16,33 +15,39 @@ OUTPUTS      = ROOT / "outputs" / "imagens"
 OUTPUTS.mkdir(parents=True, exist_ok=True)
 ERROS_LOG    = ROOT / "outputs" / "erros.log"
 
+# ── Fontes bundled (fonts/ no repo) — garante consistência em qualquer ambiente
+_FONTS_DIR = ROOT / "fonts"
 
-def _encontrar_fonte(candidatos: list[str]) -> str | None:
-    """Retorna o primeiro caminho de fonte que existe, ou None."""
+
+def _encontrar_fonte(candidatos: list[str]) -> str:
+    """Retorna o primeiro caminho de fonte que existe. Lança erro se nenhum."""
     for c in candidatos:
         if Path(c).exists():
-            return c
-    return None
+            return str(c)
+    raise FileNotFoundError(f"Nenhuma fonte encontrada: {candidatos}")
 
 
 FONT_BOLD = _encontrar_fonte([
+    str(_FONTS_DIR / "LiberationSans-Bold.ttf"),
     "C:/Windows/Fonts/arialbd.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
 ])
 
 FONT_REGULAR = _encontrar_fonte([
+    str(_FONTS_DIR / "LiberationSans-Regular.ttf"),
     "C:/Windows/Fonts/arial.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
 ])
 
 FONT_ITALIC = _encontrar_fonte([
+    str(_FONTS_DIR / "LiberationSans-Italic.ttf"),
     "C:/Windows/Fonts/ariali.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSans-Italic.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf",
     "/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf",
 ])
 
@@ -55,18 +60,9 @@ FORMATOS = {
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
-# Fontes DejaVu/Liberation renderizam ~20% menores que Arial no mesmo tamanho
-_USA_WINDOWS = FONT_BOLD and "Windows" in FONT_BOLD
-FONT_SCALE = 1.0 if _USA_WINDOWS else 1.25
-
-
 def fonte(tamanho: int, estilo: str = "bold") -> ImageFont.FreeTypeFont:
     mapa = {"bold": FONT_BOLD, "regular": FONT_REGULAR, "italic": FONT_ITALIC}
-    tamanho_real = int(tamanho * FONT_SCALE)
-    try:
-        return ImageFont.truetype(mapa.get(estilo, FONT_BOLD), tamanho_real)
-    except Exception:
-        return ImageFont.load_default()
+    return ImageFont.truetype(mapa.get(estilo, FONT_BOLD), tamanho)
 
 
 def crop_center(img: Image.Image, w: int, h: int) -> Image.Image:
@@ -142,9 +138,10 @@ def draw_rodape(draw, W, H, logo_fnt, cta_fnt, cta_linha1, cta_linha2, pad=56):
     draw.text((W - pad - (bb1[2] - bb1[0]), H - 100), cta_linha1,
               font=cta_fnt, fill=(255, 255, 255))
     if cta_linha2:
-        bb2 = draw.textbbox((0, 0), cta_linha2, font=fonte(cta_fnt.size, "italic"))
+        cta_italic = ImageFont.truetype(FONT_ITALIC, cta_fnt.size)
+        bb2 = draw.textbbox((0, 0), cta_linha2, font=cta_italic)
         draw.text((W - pad - (bb2[2] - bb2[0]), H - 100 + (bb1[3] - bb1[1]) + 4),
-                  cta_linha2, font=fonte(cta_fnt.size, "italic"), fill=(255, 220, 50))
+                  cta_linha2, font=cta_italic, fill=(255, 220, 50))
 
 
 def split_cta(cta: str):
