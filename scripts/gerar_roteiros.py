@@ -117,8 +117,20 @@ def main():
             with open(ROOT / "outputs" / "erros.log", "a", encoding="utf-8") as f:
                 f.write(f"Roteiro {i}: {e}\n")
 
-    # Consolida: une os gerados agora + os individuais que já existiam no disco
+    # Consolida: baseline = todos_roteiros.json existente → individuais → recém gerados
+    todos_path = OUTPUTS / "todos_roteiros.json"
     existentes = {}
+
+    # 1) Lê o arquivo consolidado já existente como baseline
+    if todos_path.exists():
+        try:
+            for r in json.loads(todos_path.read_text(encoding="utf-8")):
+                chave = (r.get("estrutura"), r.get("duracao"))
+                existentes[chave] = r
+        except Exception:
+            pass
+
+    # 2) Sobrescreve com arquivos individuais (versão mais recente no disco)
     for arq in OUTPUTS.glob("roteiro_estrutura*.json"):
         if arq.name == "todos_roteiros.json":
             continue
@@ -128,14 +140,17 @@ def main():
             existentes[chave] = r
         except Exception:
             pass
+
+    # 3) Sobrescreve com os recém gerados nesta execução
     for r in roteiros:
         chave = (r.get("estrutura"), r.get("duracao"))
-        existentes[chave] = r  # sobrescreve com versão mais recente
+        existentes[chave] = r
 
     todos = list(existentes.values())
-    (OUTPUTS / "todos_roteiros.json").write_text(
-        json.dumps(todos, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    if todos:  # só salva se tiver conteúdo — nunca sobrescreve com lista vazia
+        todos_path.write_text(
+            json.dumps(todos, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
     print(f"\n{len(todos)}/5 roteiros disponíveis (gerados agora + anteriores).")
 
     if not roteiros:
