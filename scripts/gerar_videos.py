@@ -1,10 +1,5 @@
-"""
-gerar_videos.py
-Gera 5 vídeos com a persona MarIAna apresentando o empreendimento.
-Usa RunwayML image_to_video: foto do empreendimento como base visual
-+ prompt rico com narração da MarIAna extraída do roteiro.
-"""
 import os
+import io
 import json
 import time
 import base64
@@ -23,11 +18,13 @@ OUTPUTS.mkdir(parents=True, exist_ok=True)
 ERROS_LOG      = ROOT / "outputs" / "erros.log"
 BASE_URL       = "https://api.dev.runwayml.com/v1"
 
+# Descrição flat illustration — alinhada com o novo perfil da MarIAna
 MARIANA_DESC = (
-    "Presenter MarIAna: Brazilian woman 32-38 years old, naturally bronzed skin, "
-    "wavy brown medium-length hair, clean sophisticated style, neutral coastal colors "
-    "(off-white, beige, light blue). Confident posture, natural body language. "
-    "Speaking directly to camera as a knowledgeable local investor, not as an actress."
+    "Flat digital illustration style character MarIAna: young woman ~28 years old, "
+    "brown skin, wavy brown hair with highlights, wearing beige blazer, white t-shirt, "
+    "light blue jeans, white sneakers. Confident and welcoming posture. "
+    "Color palette: beige #DCCFC3, coastal blue #28A9E1, warm neutral #C7C1B3. "
+    "Smooth animation, speaking directly to viewer."
 )
 
 
@@ -36,11 +33,18 @@ def listar_assets() -> list[Path]:
     return sorted([f for f in ASSETS_DIR.iterdir() if f.suffix.lower() in exts])
 
 
-def imagem_para_base64(path: Path) -> str:
-    ext_map = {".jpg": "jpeg", ".jpeg": "jpeg", ".png": "png", ".webp": "webp"}
-    mime = ext_map.get(path.suffix.lower(), "jpeg")
-    b64 = base64.b64encode(path.read_bytes()).decode()
-    return f"data:image/{mime};base64,{b64}"
+def imagem_para_base64(path: Path, max_dim: int = 1024) -> str:
+    """Redimensiona para max_dim antes de codificar (limita tamanho do payload)."""
+    try:
+        from PIL import Image
+        img = Image.open(path).convert("RGB")
+        img.thumbnail((max_dim, max_dim), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=85)
+        b64 = base64.b64encode(buf.getvalue()).decode()
+    except Exception:
+        b64 = base64.b64encode(path.read_bytes()).decode()
+    return f"data:image/jpeg;base64,{b64}"
 
 
 def construir_prompt(roteiro: dict, briefing: dict) -> str:
@@ -179,8 +183,13 @@ def main():
                 json=payload,
                 timeout=60,
             )
-            r.raise_for_status()
-            job_id = r.json().get("id")
+            print(f"  Runway POST status: {r.status_code}")
+            if r.status_code != 200:
+                raise ValueError(f"Runway erro {r.status_code}: {r.text[:300]}")
+            resp_json = r.json()
+            job_id = resp_json.get("id")
+            if not job_id:
+                raise ValueError(f"Runway sem job_id: {resp_json}")
             print(f"  Job: {job_id}")
 
             for t in range(90):
@@ -199,9 +208,12 @@ def main():
                     raise ValueError(s.get("failure", "desconhecido"))
 
         except Exception as e:
+            import traceback
+            detalhe = traceback.format_exc()
             print(f"  Erro: {e}")
+            print(f"  Detalhe:\n{detalhe}")
             with open(ERROS_LOG, "a") as f:
-                f.write(f"Video {i}: {e}\n")
+                f.write(f"Video {i}: {e}\n{detalhe}\n")
 
     print(f"\n{gerados}/5 vídeos gerados em outputs/videos/")
 
