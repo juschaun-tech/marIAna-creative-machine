@@ -1,1 +1,232 @@
-[]
+[
+  {
+    "estrutura": 1,
+    "duracao": "20s",
+    "narracao_mariana": "Localizada no Campeche, essa é uma oportunidade de investimento com ROI de 8,5% e rendimento mensal de R$ 2.500,00.",
+    "descricao_visual": [
+      {
+        "take": 1,
+        "duracao_aprox": "4s",
+        "descricao": "Vista aérea da praia de Campeche, mostrando a beleza natural do local"
+      },
+      {
+        "take": 2,
+        "duracao_aprox": "4s",
+        "descricao": "Fachada do Novo Campeche Spot, destacando a arquitetura moderna e sofisticada"
+      },
+      {
+        "take": 3,
+        "duracao_aprox": "6s",
+        "descricao": "MarIAna aparece na praia, com um tom natural e confiante, enquanto fala sobre o investimento"
+      },
+      {
+        "take": 4,
+        "duracao_aprox": "6s",
+        "descricao": "Destaque financeiro, com gráficos e números que ilustram o ROI e o rendimento mensal"
+      }
+    ],
+    "texto_na_tela": [
+      {
+        "momento": "take 2",
+        "texto": "Novo Campeche Spot",
+        "destaque": true
+      },
+      {
+        "momento": "take 3",
+        "texto": "ROI: 8,5%",
+        "destaque": true
+      },
+      {
+        "momento": "take 3",
+        "texto": "R$ 2.500,00/mês",
+        "destaque": true
+      }
+    ],
+    "cta_final": "Acesse e simule o seu retorno com a Seazone."
+  },
+  {
+    "estrutura": 1,
+    "duracao": "40s",
+    "narracao_mariana": "O Novo Campeche Spot II, localizado no coração do Campeche, oferece uma rentabilidade anual de 8,5% e um rendimento mensal de R$ 1.417,00. Com uma localização privilegiada, é um investimento seguro e rentável.",
+    "descricao_visual": [
+      {
+        "take": 1,
+        "duracao_aprox": "5s",
+        "descricao": "Vista aérea da praia do Campeche"
+      },
+      {
+        "take": 2,
+        "duracao_aprox": "5s",
+        "descricao": "Fachada do empreendimento Novo Campeche Spot II"
+      },
+      {
+        "take": 3,
+        "duracao_aprox": "10s",
+        "descricao": "MarIAna aparece em cena, caminhando em direção à câmera, com a praia ao fundo"
+      },
+      {
+        "take": 4,
+        "duracao_aprox": "10s",
+        "descricao": "MarIAna destaca os dados financeiros do empreendimento"
+      },
+      {
+        "take": 5,
+        "duracao_aprox": "10s",
+        "descricao": "Rooftop com vista para a praia do Campeche"
+      }
+    ],
+    "texto_na_tela": [
+      {
+        "momento": "take 2",
+        "texto": "Novo Campeche Spot II",
+        "destaque": true
+      },
+      {
+        "momento": "take 4",
+        "texto": "8,5% ROI",
+        "destaque": true
+      },
+      {
+        "momento": "take 4",
+        "texto": "R$ 1.417,00 rendimento mensal",
+        "destaque": true
+      }
+    ],
+    "cta_final": "Acesse e simule o seu retorno com a Seazone."
+  },
+  {
+    "estrutura": 2,
+    "duracao": "20s",
+    "narracao_mariana": "8,5% de ROI, R$ 2.500 de rendimento mensal, no Campeche.",
+    "descricao_visual": [
+      {
+        "take": 1,
+        "duracao_aprox": "5s",
+        "descricao": "Vista aérea do bairro Campeche, destacando a proximidade com o aeroporto e a universidade"
+      },
+      {
+        "take": 2,
+        "duracao_aprox": "5s",
+        "descricao": "MarIAna aparece em cena, com um fundo neutro, falando sobre o ROI e o rendimento mensal"
+      },
+      {
+        "take": 3,
+        "duracao_aprox": "5s",
+        "descricao": "Fachada do empreendimento Novo Campeche Spot, destacando a qualidade e o conforto dos apartamentos"
+      },
+      {
+        "take": 4,
+        "duracao_aprox": "5s",
+        "descricao": "Rooftop do empreendimento com vista para o bairro, MarIAna encerrando com um call to action"
+      }
+    ],
+    "texto_na_tela": [
+      {
+        "momento": "take 2",
+        "texto": "8,5% ROI",
+        "destaque": true
+      },
+      {
+        "momento": "take 2",
+        "texto": "R$ 2.500 rendimento mensal",
+        "destaque": true
+      },
+      {
+        "momento": "take 3",
+        "texto": "Novo Campeche Spot",
+        "destaque": false
+      }
+    ],
+    "cta_final": "Fale com a Seazone."
+  },
+  {
+    "estrutura": 2,
+    "duracao": "40s",
+    "narracao_mariana": "O Novo Campeche Spot II oferece uma rentabilidade anual de 8,5% e um ROI de 8,5%. Com um rendimento mensal de R$ 1.417,00, é um investimento seguro e rentável no coração do Campeche, em Florianópolis.",
+    "descricao_visual": [
+      {
+        "take": 1,
+        "duracao_aprox": "5s",
+        "descricao": "Vista aérea da região do Campeche, mostrando a proximidade com a praia e a beleza natural da área"
+      },
+      {
+        "take": 2,
+        "duracao_aprox": "15s",
+        "descricao": "MarIAna aparece em cena, com um fundo neutro, falando diretamente para a câmera sobre os benefícios do investimento"
+      },
+      {
+        "take": 3,
+        "duracao_aprox": "10s",
+        "descricao": "Fachada do empreendimento Novo Campeche Spot II, destacando sua arquitetura moderna e a localização privilegiada"
+      },
+      {
+        "take": 4,
+        "duracao_aprox": "10s",
+        "descricao": "Rooftop com vista para a cidade, dando uma sensação de amplitude e liberdade"
+      }
+    ],
+    "texto_na_tela": [
+      {
+        "momento": "take 2",
+        "texto": "ROI: 8,5%",
+        "destaque": true
+      },
+      {
+        "momento": "take 2",
+        "texto": "Rendimiento mensal: R$ 1.417,00",
+        "destaque": true
+      },
+      {
+        "momento": "take 3",
+        "texto": "Novo Campeche Spot II",
+        "destaque": false
+      }
+    ],
+    "cta_final": "Acesse e simule o seu retorno com a Seazone."
+  },
+  {
+    "estrutura": 3,
+    "duracao": "40s",
+    "narracao_mariana": "O Novo Campeche Spot II oferece ROI de 8,5% e rendimento mensal de R$ 1.417,00. Localizado no bairro Campeche, em Florianópolis.",
+    "descricao_visual": [
+      {
+        "take": 1,
+        "duracao_aprox": "5s",
+        "descricao": "Fachada do empreendimento Novo Campeche Spot II"
+      },
+      {
+        "take": 2,
+        "duracao_aprox": "10s",
+        "descricao": "MarIAna aparecendo em cena, com um ambiente limpo e sofisticado ao fundo"
+      },
+      {
+        "take": 3,
+        "duracao_aprox": "10s",
+        "descricao": "Vista aérea da região do Campeche, destacando a proximidade com a praia e a universidade"
+      },
+      {
+        "take": 4,
+        "duracao_aprox": "15s",
+        "descricao": "Rooftop do empreendimento com vista para a cidade"
+      }
+    ],
+    "texto_na_tela": [
+      {
+        "momento": "take 2",
+        "texto": "ROI: 8,5%",
+        "destaque": true
+      },
+      {
+        "momento": "take 2",
+        "texto": "Rendimento mensal: R$ 1.417,00",
+        "destaque": true
+      },
+      {
+        "momento": "take 3",
+        "texto": "Localizado no coração do Campeche",
+        "destaque": false
+      }
+    ],
+    "cta_final": "Fale com a Seazone e descubra como tornar o Novo Campeche Spot II uma realidade para você."
+  }
+]

@@ -117,10 +117,26 @@ def main():
             with open(ROOT / "outputs" / "erros.log", "a", encoding="utf-8") as f:
                 f.write(f"Roteiro {i}: {e}\n")
 
+    # Consolida: une os gerados agora + os individuais que já existiam no disco
+    existentes = {}
+    for arq in OUTPUTS.glob("roteiro_estrutura*.json"):
+        if arq.name == "todos_roteiros.json":
+            continue
+        try:
+            r = json.loads(arq.read_text(encoding="utf-8"))
+            chave = (r.get("estrutura"), r.get("duracao"))
+            existentes[chave] = r
+        except Exception:
+            pass
+    for r in roteiros:
+        chave = (r.get("estrutura"), r.get("duracao"))
+        existentes[chave] = r  # sobrescreve com versão mais recente
+
+    todos = list(existentes.values())
     (OUTPUTS / "todos_roteiros.json").write_text(
-        json.dumps(roteiros, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(todos, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print(f"\n{len(roteiros)}/5 roteiros gerados.")
+    print(f"\n{len(todos)}/5 roteiros disponíveis (gerados agora + anteriores).")
 
     if not roteiros:
         print("ERRO FATAL: Nenhum roteiro gerado. Verifique o rate limit do Groq.")

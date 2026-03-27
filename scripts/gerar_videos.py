@@ -76,20 +76,23 @@ def construir_prompt(roteiro: dict, briefing: dict) -> str:
         texto_tela += f"{rend}/mês | "
     texto_tela += f"{bairro}, {cidade} - SC"
 
-    prompt = (
-        f"Cinematic real estate marketing video for {nome}, {bairro}, {cidade}, Brazil. "
-        f"Flow: {flow}. "
-        f"{MARIANA_DESC} "
-        f"Scene: {take1} " if take1 else ""
-        f"Narration context: '{narracao[:120]}' "
-        f"On-screen text overlay: '{texto_tela}'. "
-        f"CTA at end: '{cta}'. "
-        f"Style: premium real estate, bright natural lighting, no dark filters, "
-        f"no borders, no side blur, smooth transitions. "
-        f"Location pin labeled SPOT visible on the building. "
-        f"Duration feel: {duracao}."
-    )
-    return prompt.strip()
+    partes = [
+        f"Cinematic real estate marketing video for {nome}, {bairro}, {cidade}, Brazil.",
+        f"Flow: {flow}.",
+        MARIANA_DESC,
+    ]
+    if take1:
+        partes.append(f"Scene: {take1}")
+    partes += [
+        f"Narration context: '{narracao[:120]}'",
+        f"On-screen text overlay: '{texto_tela}'.",
+        f"CTA at end: '{cta}'.",
+        "Style: premium real estate, bright natural lighting, no dark filters,",
+        "no borders, no side blur, smooth transitions.",
+        "Location pin labeled SPOT visible on the building.",
+        f"Duration feel: {duracao}.",
+    ]
+    return " ".join(partes)
 
 
 def carregar_briefing() -> dict:
@@ -111,15 +114,30 @@ def main():
             f.write("gerar_videos: RUNWAY_API_KEY não configurada\n")
         return
 
+    # Carrega roteiros — tenta todos_roteiros.json, cai nos individuais se vazio
     roteiros_path = ROTEIROS_DIR / "todos_roteiros.json"
-    if not roteiros_path.exists():
-        print("ERRO: Execute gerar_roteiros.py primeiro.")
+    roteiros = []
+    if roteiros_path.exists():
+        try:
+            roteiros = json.loads(roteiros_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    if not roteiros:
+        print("todos_roteiros.json vazio — carregando arquivos individuais...")
+        for arq in sorted(ROTEIROS_DIR.glob("roteiro_estrutura*.json")):
+            try:
+                roteiros.append(json.loads(arq.read_text(encoding="utf-8")))
+            except Exception:
+                pass
+
+    if not roteiros:
+        print("ERRO: nenhum roteiro encontrado. Execute gerar_roteiros.py primeiro.")
+        with open(ERROS_LOG, "a") as f:
+            f.write("gerar_videos: nenhum roteiro disponível\n")
         return
 
-    roteiros = json.loads(roteiros_path.read_text(encoding="utf-8"))
-    if not roteiros:
-        print("ERRO: todos_roteiros.json está vazio.")
-        return
+    print(f"{len(roteiros)} roteiro(s) carregado(s).")
 
     assets = listar_assets()
     if not assets:
