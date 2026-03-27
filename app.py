@@ -74,16 +74,20 @@ def rodar_maquina(url_briefing: str):
         links_path.write_text(f"{url_briefing}\n", encoding="utf-8")
 
         # Etapa 1 — Briefing
-        progress_status.update({"etapa": "Lendo briefing...", "pct": 15})
+        progress_status.update({"etapa": "Lendo briefing...", "pct": 10})
         rodar_script("ler_briefing.py")  # continua mesmo se falhar (usa defaults)
 
-        # Etapa 2 — Imagens (usa briefing + assets já salvos em assets/)
-        progress_status.update({"etapa": "Gerando imagens...", "pct": 40})
+        # Etapa 2 — Roteiros (usa briefing extraído)
+        progress_status.update({"etapa": "Gerando roteiros...", "pct": 30})
+        rodar_script("gerar_roteiros.py")
+
+        # Etapa 3 — Imagens (usa briefing + assets já salvos em assets/)
+        progress_status.update({"etapa": "Gerando imagens...", "pct": 55})
         rodar_script("gerar_imagens.py")
 
-        # Etapa 3 — Vídeos (timeout de 90s — não bloqueia o ZIP)
-        progress_status.update({"etapa": "Gerando vídeos...", "pct": 75})
-        rodar_script("gerar_videos.py", timeout=90)
+        # Etapa 4 — Vídeos com MarIAna (usa roteiros + assets)
+        progress_status.update({"etapa": "Gerando vídeos...", "pct": 80})
+        rodar_script("gerar_videos.py", timeout=600)
 
         # Compacta outputs
         progress_status.update({"etapa": "Compactando criativos...", "pct": 95})
